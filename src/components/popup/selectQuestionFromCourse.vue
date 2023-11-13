@@ -199,7 +199,7 @@ export default defineComponent({
   },
   setup() {
     const { updateSelectQuestionFromCourseStatus } = usePopupStore();
-    const { getCourseData, loadLesson } = useSelectQuestionStore();
+    const { getCourseData } = useSelectQuestionStore();
     const { addQuestionToCurrentList } = useQuestionBankStore();
     const {
       courses,

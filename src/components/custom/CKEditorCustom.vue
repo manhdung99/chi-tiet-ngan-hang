@@ -22,7 +22,7 @@ export default defineComponent({
     },
   },
   emits: ["update:modelValue"],
-  setup(props, { emit }) {
+  setup(props) {
     const localEditorData = ref(""); // Use props.value, not props.editorData
 
     function uploader(editor: any) {

@@ -102,7 +102,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, ref } from "vue";
 import closeIcon from "../../assets/image/close-icon.svg";
 import { usePopupStore } from "../../stores/popup";
 import { useQuestionBankStore } from "../../stores/question-bank-store";

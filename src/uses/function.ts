@@ -53,10 +53,10 @@ export function generateRandomHexId() {
   return result;
 }
 export async function validateQuestion(partQuestions: PartQuestion[]) {
-  partQuestions = partQuestions.map((part, partIndex) => {
+  partQuestions = partQuestions.map((part) => {
     if (part.Type == "QUIZ1" || part.Type == "QUIZ4") {
       if (part.Questions.length > 0) {
-        part.Questions.forEach((question: Question, index) => {
+        part.Questions.forEach((question: Question) => {
           if (question.Answers && question.Answers.length == 0) {
             part = { ...part, validateError: true };
           } else {

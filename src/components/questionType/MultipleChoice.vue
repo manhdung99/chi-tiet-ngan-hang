@@ -74,7 +74,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import binIcon from "../../assets/image/noun-bin.svg";
 import Answer from "../../type/answer";
 import CKEditorCustom from "../custom/CKEditorCustom.vue";

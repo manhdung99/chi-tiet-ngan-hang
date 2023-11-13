@@ -1,7 +1,6 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import PartQuestion from "../type/partQuestion";
-import Question from "../type/question";
 import Lesson from "../type/lesson";
 import { generateRandomHexId } from "../uses/function";
 import { usePopupStore } from "./popup";

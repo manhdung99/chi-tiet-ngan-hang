@@ -46,7 +46,10 @@
               :showAll="showAll"
             />
           </div>
-          <div class="text-red-500" v-if="currentBankQuestions.length == 0">
+          <div
+            class="text-red-500"
+            v-if="currentBankQuestions.length == 0 && !isLoading"
+          >
             Không có dữ liệu
           </div>
           <div
@@ -85,7 +88,7 @@
           <div></div>
           <div class="mt-6">
             <p class="font-bold border-b border-black pb-2">Tuỳ chọn</p>
-            <div class="flex items-center">
+            <div class="flex items-center mt-2">
               <input
                 v-model="showAll"
                 class="w-4 h-4 cursor-pointer"
@@ -222,7 +225,6 @@ import { usePopupStore } from "./stores/popup";
 import { validateQuestion } from "./uses/function";
 import Answer from "./type/answer";
 import Question from "./type/question";
-import { nextTick } from "vue";
 import PartQuestion from "./type/partQuestion";
 export default defineComponent({
   name: "QuestionBankVue",
@@ -246,7 +248,7 @@ export default defineComponent({
       openSelectQuestionFromBank,
       openStatisticsBankModal,
     } = storeToRefs(usePopupStore());
-    const { updateAddNewBankModalStatus, updateLoading } = usePopupStore();
+    const { updateAddNewBankModalStatus } = usePopupStore();
     const { isLoading } = storeToRefs(usePopupStore());
     const { getCurrentBankQuestions, deleteQuestion } = useQuestionBankStore();
     const { currentBankQuestions } = storeToRefs(useQuestionBankStore());
@@ -327,7 +329,7 @@ export default defineComponent({
       loadMathJax();
     };
     onMounted(async () => {
-      await getCurrentBankQuestions("6073df26c549a13e4c631636");
+      await getCurrentBankQuestions("64f7f457337edb68780c8d13");
       const bankName = localStorage.getItem("bankName");
       if (bankName) {
         currentbankName.value = bankName;
@@ -564,6 +566,13 @@ export default defineComponent({
 });
 </script>
 <style>
+body {
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
 .breadcrumb {
   color: #00000073;
   font-size: 14px;
