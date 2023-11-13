@@ -1,0 +1,7 @@
+.ck-content {
+    border: 1px solid #00000026;
+}
+
+iframe#webpack-dev-server-client-overlay {
+    display: none !important
+}

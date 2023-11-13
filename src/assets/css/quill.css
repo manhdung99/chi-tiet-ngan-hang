@@ -1,0 +1,10 @@
+.button_fillquiz_icon {
+    background-image: url('https://static.eduso.vn/js/plugins/ck4/plugins/fillquiz/icons/fillquiz.png?t=K24B') !important;
+    background-position: 0 !important;
+    background-size: 16px !important;
+    background-repeat: no-repeat !important;
+}
+
+.ql-tooltip {
+    z-index: 10px;
+}
