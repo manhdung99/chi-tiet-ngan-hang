@@ -1,22 +1,22 @@
-.btn {
+.button {
     padding: 0.5rem 0.75rem;
     border-radius: 0.5rem;
     height: 2.5rem;
     cursor: pointer;
 }
 
-.btn-primary {
+.button-primary {
     background: #105277;
     color: white;
 }
 
-.btn-primary:hover {
+.button-primary:hover {
     border: 1px solid #105277;
     color: #105277;
     background: white;
 }
 
-.btn-primary:disabled {
+.button-primary:disabled {
     border: 1px solid #999999;
     background-color: #cccccc;
     color: #666666;
@@ -44,7 +44,7 @@
     color: #00000026;
 }
 
-.modal {
+.custom-modal {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -54,7 +54,7 @@
     display: flex;
 }
 
-.modal.center {
+.custom-modal.center {
     display: flex;
     justify-content: center;
     align-items: center;

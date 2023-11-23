@@ -169,7 +169,7 @@
               resetData();
               isEdit = false;
             "
-            class="btn bg-white text-red-500 border border-gray-300 mr-3 w-15"
+            class="button bg-white text-red-500 border border-gray-300 mr-3 w-15"
           >
             Huỷ
           </button>
@@ -178,7 +178,7 @@
               updateQuestionInQuestionList(question);
               isEdit = false;
             "
-            class="btn btn-primary"
+            class="button button-primary"
           >
             Lưu
           </button>

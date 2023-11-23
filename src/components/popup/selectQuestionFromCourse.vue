@@ -1,9 +1,9 @@
 <template>
-  <div class="modal">
+  <div class="custom-modal">
     <div
       class="bg-white rounded-sm p-4 select-question-from-course max-h-screen relative"
     >
-      <div class="select-modal-content h-full scroll-area">
+      <div class="select-custom-modal-content h-full scroll-area">
         <div
           class="flex items-center justify-between font-semibold text-xl border-b pb-2"
         >
@@ -157,14 +157,14 @@
       <div class="absolute bottom-4 right-4">
         <button
           @click="cancelAction()"
-          class="btn bg-white text-red-500 border border-gray-300 mr-3 w-15"
+          class="button bg-white text-red-500 border border-gray-300 mr-3 w-15"
         >
           Huỷ
         </button>
         <button
           :disabled="currentSelectedQuestion.length == 0"
           @click="saveData()"
-          class="btn w-15 btn-primary"
+          class="button w-15 button-primary"
         >
           Lưu
         </button>
@@ -1268,7 +1268,7 @@ export default defineComponent({
 .select-question-from-course {
   width: 100%;
 }
-.select-modal-content {
+.select-custom-modal-content {
   max-height: calc(100vh - 80px);
 }
 </style>

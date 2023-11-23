@@ -153,7 +153,7 @@ export default defineComponent({
     });
     const setDefaultProperty = () => {
       const elements = document.querySelectorAll(
-        ".select-bank-modal-content .fillquiz"
+        ".select-bank-custom-modal-content .fillquiz"
       );
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i] as HTMLInputElement;

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal">
+  <div class="custom-modal">
     <div
       v-if="!openListSelected"
       class="bg-white rounded-sm select-question-from-bank max-h-screen w-full relative"
@@ -123,7 +123,7 @@
             <div class="flex items-center">
               <button
                 @click="validatelistSelectedQuestion"
-                class="btn btn-primary text-sm mr-4"
+                class="button button-primary text-sm mr-4"
               >
                 Kiểm tra lỗi
               </button>
@@ -322,11 +322,11 @@ export default defineComponent({
 .scroll::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.1);
 }
-.select-bank-modal-content {
+.select-bank-custom-modal-content {
   max-height: calc(100vh - 80px);
   overflow: hidden;
 }
-.select-bank-modal-content-part2 {
+.select-bank-custom-modal-content-part2 {
   max-height: 100vh;
 }
 .select-question-from-bank .main-content {

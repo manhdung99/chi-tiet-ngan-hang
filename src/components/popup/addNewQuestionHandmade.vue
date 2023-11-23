@@ -1,5 +1,5 @@
 <template>
-  <div class="modal center">
+  <div class="custom-modal center">
     <div class="add-new-handmade scroll-area">
       <div class="border-b px-4 py-4 flex justify-between">
         <span class="text-indigo font-bold">Thêm câu hỏi</span>
@@ -82,21 +82,23 @@
           </div>
         </div>
         <div v-if="type != 'QUIZ2'" class="flex my-4">
-          <button @click="addNewQuestion" class="mr-2 btn btn-blue">
+          <button @click="addNewQuestion" class="mr-2 button small-button">
             Thêm câu hỏi
           </button>
-          <button class="ml-2 btn btn-blue">Thêm từ file excel</button>
+          <button class="ml-2 button small-button">Thêm từ file excel</button>
         </div>
       </div>
       <!-- Bottom  -->
       <div class="flex justify-end px-4 pt-4 pb-1">
         <button
           @click="updateAddNewQuestionHandmadeModalStatus(false)"
-          class="btn mr-3 h-8"
+          class="button mr-3 h-8"
         >
           Đóng
         </button>
-        <button @click="addQuestionToList" class="btn btn-primary">Lưu</button>
+        <button @click="addQuestionToList" class="button button-primary">
+          Lưu
+        </button>
       </div>
     </div>
   </div>
@@ -230,7 +232,7 @@ export default defineComponent({
 .ql-container.ql-snow {
   min-height: 200px;
 }
-.btn-blue {
+.small-button {
   background: #3b82f6;
   color: white;
   font-weight: 500;
@@ -238,10 +240,10 @@ export default defineComponent({
   display: flex;
   align-items: center;
 }
-.btn-blue:hover {
+.small-button:hover {
   background: #1e40af;
 }
-.btn.btn-blue {
+.add-new-handmade .small-button {
   height: 32px;
 }
 </style>

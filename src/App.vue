@@ -11,7 +11,7 @@
           Tạo ngân hàng câu hỏi
         </div>
         <div>
-          <button class="btn btn-primary">Lưu</button>
+          <button class="button button-primary">Lưu</button>
         </div>
       </div>
     </div>
@@ -27,7 +27,10 @@
               <input v-model="currentbankName" class="input" type="text" />
             </div>
             <div class="">
-              <button @click="validatelistQuestion" class="btn btn-primary">
+              <button
+                @click="validatelistQuestion"
+                class="button button-primary"
+              >
                 Kiểm tra lỗi
               </button>
             </div>
@@ -72,11 +75,13 @@
         <div class="flex flex-col top-4">
           <button
             @click="updateAddNewBankModalStatus(true)"
-            class="btn btn-primary mt-2"
+            class="button button-primary mt-2"
           >
             Thêm câu hỏi
           </button>
-          <button class="btn bg-white text-red-500 border border-gray-300 mt-4">
+          <button
+            class="button bg-white text-red-500 border border-gray-300 mt-4"
+          >
             Xoá ngân hàng
           </button>
           <span
@@ -195,7 +200,7 @@
   <Teleport to="body">
     <div
       v-if="isLoading"
-      class="fixed top-0 bottom-0 right-0 left-0 flex justify-center items-center bg-modal z-10"
+      class="fixed top-0 bottom-0 right-0 left-0 flex justify-center items-center bg-custom-modal z-10"
     >
       <img :src="loadingIcon" alt="" />
     </div>
