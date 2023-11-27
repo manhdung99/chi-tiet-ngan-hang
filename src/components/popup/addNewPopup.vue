@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-modal center">
+  <div class="custom-modal modal-center">
     <div class="bg-white rounded-sm p-4 add-new-popup">
       <div class="flex items-center justify-between font-semibold text-xl">
         Thêm câu hỏi
@@ -13,7 +13,7 @@
             updateSelectQuestionFromCourseStatus(true);
             updateAddNewBankModalStatus(false);
           "
-          class="card"
+          class="card-add-new"
         >
           <div class="font-semibold">Chọn từ học liệu</div>
           <div class="text-sm">Chọn từ thư viện sách của Eduso</div>
@@ -24,12 +24,18 @@
             updateSelectQuestionFromBankStatus(true);
             updateAddNewBankModalStatus(false);
           "
-          class="card"
+          class="card-add-new"
         >
           <div class="font-semibold">Chọn từ ngân hàng khác</div>
           <div class="text-sm">Chọn từ thư viện sách của Eduso</div>
         </div>
-        <div class="card">
+        <div
+          @click="
+            updateOpenImportFromFileModalStatus(true);
+            updateAddNewBankModalStatus(false);
+          "
+          class="card-add-new"
+        >
           <div class="font-semibold">Tạo từ file Word</div>
           <div class="text-sm">Chọn từ thư viện sách của Eduso</div>
         </div>
@@ -38,7 +44,7 @@
             updateAddNewQuestionHandmadeModalStatus(true);
             updateAddNewBankModalStatus(false);
           "
-          class="card"
+          class="card-add-new"
         >
           <div class="font-semibold">Tạo thủ công</div>
           <div class="text-sm">Chọn từ thư viện sách của Eduso</div>
@@ -59,6 +65,7 @@ export default defineComponent({
       updateAddNewQuestionHandmadeModalStatus,
       updateSelectQuestionFromCourseStatus,
       updateSelectQuestionFromBankStatus,
+      updateOpenImportFromFileModalStatus,
     } = usePopupStore();
     return {
       closeIcon,
@@ -66,6 +73,7 @@ export default defineComponent({
       updateAddNewQuestionHandmadeModalStatus,
       updateSelectQuestionFromCourseStatus,
       updateSelectQuestionFromBankStatus,
+      updateOpenImportFromFileModalStatus,
     };
   },
 });
@@ -76,14 +84,5 @@ export default defineComponent({
   background: white;
   border-radius: 4px;
   padding: 16px;
-}
-.card {
-  background: #f5f5f5;
-  border-radius: 4px;
-  padding: 16px 20px;
-  min-width: 300px;
-  margin-bottom: 16px;
-  margin-right: 16px;
-  cursor: pointer;
 }
 </style>

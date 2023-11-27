@@ -31,10 +31,17 @@
       <div class="text-indigo text-lg my-4">Trả lời (đánh dấu nếu đúng)</div>
       <!-- Card  -->
       <div class="flex flex-wrap">
-        <div v-for="answer in answerArray" :key="answer.ID" class="w-1/2 px-2">
+        <div
+          v-for="(answer, index) in answerArray"
+          :key="answer.ID"
+          class="w-1/2 px-2"
+        >
           <div
             class="border border-indigo p-2.5 pr-8 pt-10 rounded-lg relative block w-full mb-6"
           >
+            <div class="text-indigo absolute font-semibold top-4">
+              Đáp án {{ index + 1 }}
+            </div>
             <div
               @click="removeAnswer(answer.ID)"
               class="font-bold inline-block px-2 py-0.5 border rounded-full absolute -top-3 -right-3 text-gray-400 bg-white hover:text-black-lighter hover:border-black-lighter cursor-pointer"
@@ -74,7 +81,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import binIcon from "../../assets/image/noun-bin.svg";
 import Answer from "../../type/answer";
 import CKEditorCustom from "../custom/CKEditorCustom.vue";
@@ -125,6 +132,9 @@ export default defineComponent({
     };
     onMounted(() => {
       answerArray.value = props.question.Answers;
+    });
+    watch(questionContent, () => {
+      props.updateQuestionContent(props.question.ID, questionContent.value);
     });
     return {
       answerIndex,

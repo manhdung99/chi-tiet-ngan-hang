@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-modal center">
+  <div class="custom-modal modal-center">
     <div class="bg-white rounded-sm p-4 statistics-popup">
       <div class="flex items-center justify-between font-semibold text-xl">
         Thống kê ngân hàng đề

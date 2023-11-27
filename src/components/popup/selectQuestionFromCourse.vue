@@ -51,13 +51,13 @@
               class="input w-1/2"
               type="text"
               placeholder="Tìm kiếm"
-              v-model="descriptionOneTime"
+              v-model="tagsNameOneTime"
             />
           </div>
           <!-- Chọn học liệu  -->
           <div class="w-full">
             <p class="my-4 text-base font-bold">2.Chọn học liệu</p>
-            <div class="flex w-full">
+            <div class="flex w-full px-0.5">
               <div class="w-1/2 pr-2">
                 <p class="mb-1 text-sm font-bold">Chọn Chương trình</p>
                 <multiselect
@@ -91,7 +91,7 @@
                 @click="showSelectedSentence = false"
                 :class="
                   !showSelectedSentence
-                    ? 'border-b-2 border-blue-500 text-blue-500'
+                    ? '!border-b-2 border-blue-500 text-blue-500'
                     : ''
                 "
                 class="text-sm border-b pb-3 pr-2"
@@ -102,7 +102,7 @@
                 @click="showSelectedSentence = true"
                 :class="
                   showSelectedSentence
-                    ? 'border-b-2 border-blue-500 text-blue-500'
+                    ? '!border-b-2 border-blue-500 text-blue-500'
                     : ''
                 "
                 class="text-sm border-b pb-3 pl-2"
@@ -150,7 +150,9 @@
               </div>
             </div>
           </div>
-          <div class="mt-4" v-else>Không có dữ liệu</div>
+          <div class="mt-4 text-red-500" v-if="!isLoading && !isFilterCourse">
+            Không có dữ liệu
+          </div>
         </div>
       </div>
 
@@ -199,12 +201,14 @@ export default defineComponent({
   },
   setup() {
     const { updateSelectQuestionFromCourseStatus } = usePopupStore();
+    const { isLoading } = storeToRefs(usePopupStore());
     const { getCourseData } = useSelectQuestionStore();
     const { addQuestionToCurrentList } = useQuestionBankStore();
+    const { arrayAddnew } = storeToRefs(useQuestionBankStore());
     const {
       courses,
       isFillDesOnetime,
-      descriptionOneTime,
+      tagsNameOneTime,
       chapters,
       listLessons,
       listLessonParts,
@@ -225,6 +229,10 @@ export default defineComponent({
     };
     const saveData = () => {
       addQuestionToCurrentList(currentSelectedQuestion.value);
+      arrayAddnew.value = [
+        ...arrayAddnew.value,
+        ...currentSelectedQuestion.value,
+      ];
       currentSelectedQuestion.value = [];
       updateSelectQuestionFromCourseStatus(false);
     };
@@ -1252,9 +1260,10 @@ export default defineComponent({
       courses,
       currentSelectedQuestion,
       isFillDesOnetime,
-      descriptionOneTime,
+      tagsNameOneTime,
       listLessons,
       listLessonParts,
+      isLoading,
       cancelAction,
       saveData,
       updateSelectQuestionFromCourseStatus,
@@ -1270,6 +1279,9 @@ export default defineComponent({
 }
 .select-custom-modal-content {
   max-height: calc(100vh - 80px);
+}
+.select-question-from-course .multiselect {
+  border: var(--ms-border-width, 1px) solid var(--ms-border-color, #d1d5db) !important;
 }
 </style>
 <style src="@vueform/multiselect/themes/default.css"></style>

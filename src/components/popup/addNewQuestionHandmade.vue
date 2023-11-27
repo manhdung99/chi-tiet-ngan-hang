@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-modal center">
+  <div class="custom-modal modal-center">
     <div class="add-new-handmade scroll-area">
       <div class="border-b px-4 py-4 flex justify-between">
         <span class="text-indigo font-bold">Thêm câu hỏi</span>
@@ -42,7 +42,7 @@
           </div>
         </div>
         <!-- Tiêu đề -->
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-between mb-2 relative">
           <div class="w-full">
             <div class="text-indigo font-semibold mb-2">Tiêu đề</div>
             <div>
@@ -51,24 +51,29 @@
                 class="input w-full placeholder-gray-400"
                 placeholder="Tiêu đề"
               />
+              <div
+                v-if="isValidation && title == ''"
+                class="text-red-500 text-sm"
+              >
+                Chưa có tiêu đề
+              </div>
             </div>
           </div>
         </div>
         <!-- Text edit  -->
 
-        <div>
+        <div class="relative">
           <div class="text-indigo font-semibold mb-2">Nội dung câu hỏi</div>
           <CKEditorCustom
             :model-value="editorData"
             @update:model-value="(newValue:any) => (editorData = newValue)"
           />
-          <!-- <QuillEditor
-            contentType="html"
-            v-model:content="editerData"
-            toolbar="full"
-            ref="editor"
-            theme="snow"
-          /> -->
+          <div
+            v-if="isValidation && editorData == ''"
+            class="text-red-500 text-sm"
+          >
+            Chưa có nội dung
+          </div>
           <div v-if="questionArray.length > 0" class="mt-4">
             <MultipleChoice
               v-for="(question, index) in questionArray"
@@ -113,6 +118,7 @@ import MultipleChoice from "../questionType/MultipleChoice.vue";
 import Question from "../../type/question";
 import Answer from "../../type/answer";
 import CKEditorCustom from "../custom/CKEditorCustom.vue";
+import { Alert } from "ant-design-vue";
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 export default defineComponent({
   name: "AddNewQuestionHandmade",
@@ -122,7 +128,7 @@ export default defineComponent({
   },
   setup() {
     const { updateAddNewQuestionHandmadeModalStatus } = usePopupStore();
-    const { questionDeleteID, questionDeleteIndex } = storeToRefs(
+    const { questionDeleteID, questionDeleteIndex, arrayAddnew } = storeToRefs(
       useQuestionBankStore()
     );
     const { addQuestionToCurrentList } = useQuestionBankStore();
@@ -130,6 +136,7 @@ export default defineComponent({
     const type = ref("QUIZ1");
     const level = ref("1");
     const title = ref("");
+    const isValidation = ref(false);
     const questionType = ref("1");
     const questionArray = ref<Question[]>([]);
     const addNewQuestion = () => {
@@ -164,18 +171,21 @@ export default defineComponent({
       },
     };
     const addQuestionToList = () => {
-      const data = {
-        Type: type.value,
-        ID: Math.random().toString(16).slice(2),
-        Description: editorData.value,
-        Media: null,
-        Title: title.value,
-        Questions: questionArray.value,
-        LevelPart: Number.parseInt(level.value),
-        TypePart: Number.parseInt(questionType.value),
-      };
-      addQuestionToCurrentList([data]);
-      updateAddNewQuestionHandmadeModalStatus(false);
+      if (validateQuestion()) {
+        const data = {
+          Type: type.value,
+          ID: Math.random().toString(16).slice(2),
+          Description: editorData.value,
+          Media: null,
+          Title: title.value,
+          Questions: questionArray.value,
+          LevelPart: Number.parseInt(level.value),
+          TypePart: Number.parseInt(questionType.value),
+        };
+        addQuestionToCurrentList([data]);
+        arrayAddnew.value = [...arrayAddnew.value, data];
+        updateAddNewQuestionHandmadeModalStatus(false);
+      }
     };
     const updateQuestionContent = (id: string, content: string) => {
       const question = questionArray.value.find(
@@ -196,6 +206,53 @@ export default defineComponent({
     const updateEditorData = (data: any) => {
       editorData.value = data;
     };
+    const validateQuestion = () => {
+      let validateData = true;
+      isValidation.value = true;
+      if (title.value == "") {
+        return false;
+      }
+      if (editorData.value == "") {
+        return false;
+      }
+      if (type.value == "QUIZ1" || type.value == "QUIZ4") {
+        if (questionArray.value.length > 0) {
+          questionArray.value.forEach((question: Question) => {
+            if (question.Answers && question.Answers.length == 0) {
+              alert("Cần ít nhất 1 câu trả lời");
+              validateData = false;
+            } else {
+              let trueAnswerTime = 0;
+              question.Answers?.forEach((answer) => {
+                if (answer.Content == "") {
+                  alert("Câu trả lời không được để trống");
+                  validateData = false;
+                } else if (answer.IsCorrect) {
+                  if (type.value == "QUIZ4") {
+                    validateData = true;
+                  } else {
+                    validateData = true;
+                    trueAnswerTime = trueAnswerTime + 1;
+                    if (trueAnswerTime > 1) {
+                      alert("QUIZ 1 chỉ có 1 đáp án đúng cho 1 câu hỏi");
+                      validateData = false;
+                    }
+                  }
+                }
+              });
+              if (trueAnswerTime == 0) {
+                alert("Chưa có câu trả lời đúng");
+                validateData = false;
+              }
+            }
+          });
+        } else {
+          alert("Cần ít nhất 1 câu hỏi");
+          validateData = false;
+        }
+      }
+      return validateData;
+    };
     return {
       closeIcon,
       questionDeleteID,
@@ -207,6 +264,8 @@ export default defineComponent({
       title,
       level,
       questionType,
+      arrayAddnew,
+      isValidation,
       updateAddNewQuestionHandmadeModalStatus,
       addNewQuestion,
       removeQuestion,

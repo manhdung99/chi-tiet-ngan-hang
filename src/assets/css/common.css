@@ -3,11 +3,17 @@
     border-radius: 0.5rem;
     height: 2.5rem;
     cursor: pointer;
+    outline: none;
 }
 
 .button-primary {
     background: #105277;
     color: white;
+    padding: 0 16px;
+}
+
+.button-primary:focus {
+    outline: none;
 }
 
 .button-primary:hover {
@@ -52,9 +58,10 @@
     left: 0;
     background: #8c8c8c33;
     display: flex;
+    z-index: 10;
 }
 
-.custom-modal.center {
+.custom-modal.modal-center {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -97,4 +104,8 @@
     outline: none;
     /* line-height: 25px; */
     border: solid 1px #999
+}
+
+.question-detail {
+    box-shadow: #D0DFE8 0px 1px 3px 0px, #D0DFE8 0px 0px 0px 1px;
 }

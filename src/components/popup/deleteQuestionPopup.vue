@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-modal center z-10">
+  <div class="custom-modal modal-center z-10">
     <div
       class="w-80 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-lg z-10"
     >
@@ -71,14 +71,5 @@ export default defineComponent({
   background: white;
   border-radius: 4px;
   padding: 16px;
-}
-.card {
-  background: #f5f5f5;
-  border-radius: 4px;
-  padding: 16px 20px;
-  min-width: 300px;
-  margin-bottom: 16px;
-  margin-right: 16px;
-  cursor: pointer;
 }
 </style>

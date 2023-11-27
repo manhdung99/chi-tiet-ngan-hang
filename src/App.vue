@@ -1,21 +1,25 @@
 <template>
   <div class="question-bank-detail">
+    <!-- <div class="save-button">
+      <button @click="addBank" class="button button-primary">Lưu</button>
+    </div> -->
     <!-- Header page  -->
     <div class="page-header bg-white px-6 py-5">
       <span class="breadcrumb">Home/ Khảo thí / Tiếng Anh</span>
       <div class="flex justify-between items-center">
         <div class="font-semibold text-xl flex items-center">
-          <span @click="getCurrentBankQuestions('')" class="cursor-pointer mr-4"
+          <span class="cursor-pointer mr-4"
             ><img :src="leftIcon" alt=""
           /></span>
           Tạo ngân hàng câu hỏi
         </div>
-        <div>
-          <button class="button button-primary">Lưu</button>
+        <div class="save-button">
+          <button @click="addBank" class="button button-primary">Lưu</button>
         </div>
       </div>
     </div>
-    <div class="page-body p-6 relative pb-0">
+    <div class="page-body relative p-6 pb-0">
+      <!-- <div class="page-body relative pb-0"> -->
       <div class="flex justify-between">
         <!-- Question  -->
         <div class="flex-1 mr-9">
@@ -75,7 +79,7 @@
         <div class="flex flex-col top-4">
           <button
             @click="updateAddNewBankModalStatus(true)"
-            class="button button-primary mt-2"
+            class="button button-primary"
           >
             Thêm câu hỏi
           </button>
@@ -198,6 +202,9 @@
     <statisticsPopup v-if="openStatisticsBankModal" />
   </Teleport>
   <Teleport to="body">
+    <ImportFromFile v-if="openImportFromFile" />
+  </Teleport>
+  <Teleport to="body">
     <div
       v-if="isLoading"
       class="fixed top-0 bottom-0 right-0 left-0 flex justify-center items-center bg-custom-modal z-10"
@@ -220,6 +227,7 @@ import duplicatePopup from "./components/popup/duplicateQuestionPopup.vue";
 import addNewQuestionHandmade from "@/components/popup/addNewQuestionHandmade.vue";
 import selectQuestionFromCourse from "@/components/popup/selectQuestionFromCourse.vue";
 import SelectQuestionFromBank from "@/components/popup/selectQuestionFromBank.vue";
+import ImportFromFile from "@/components/popup/importQuestionFromFile.vue";
 import statisticsPopup from "@/components/popup/statisticsPopup.vue";
 import loadingIcon from "./assets/image/loading-gif.gif";
 import { computed, defineComponent, onMounted, ref, watch } from "vue";
@@ -241,6 +249,7 @@ export default defineComponent({
     addNewQuestionHandmade,
     selectQuestionFromCourse,
     SelectQuestionFromBank,
+    ImportFromFile,
     statisticsPopup,
   },
   setup() {
@@ -252,11 +261,23 @@ export default defineComponent({
       openSelectQuestionFromCourse,
       openSelectQuestionFromBank,
       openStatisticsBankModal,
+      openImportFromFile,
     } = storeToRefs(usePopupStore());
     const { updateAddNewBankModalStatus } = usePopupStore();
     const { isLoading } = storeToRefs(usePopupStore());
-    const { getCurrentBankQuestions, deleteQuestion } = useQuestionBankStore();
-    const { currentBankQuestions } = storeToRefs(useQuestionBankStore());
+    const {
+      getCurrentBankQuestions,
+      deleteQuestion,
+      updateSubjectID,
+      addOrUpdateBank,
+    } = useQuestionBankStore();
+    const {
+      currentBankQuestions,
+      arrayAddnew,
+      arrayDelete,
+      arrayUpdate,
+      subjectID,
+    } = storeToRefs(useQuestionBankStore());
     const currentBankQuestionFilter = ref<PartQuestion[]>([]);
     const answerListQuiz2 = ref<Answer[]>([]);
     const DesIndex = ref(0);
@@ -270,6 +291,7 @@ export default defineComponent({
     const showOnlyEssay = ref(false);
     const filterArray = ref();
     const filterKey = ref("");
+    const bankID = ref("");
     const currentbankName = ref("");
     const createListAnswerQuiz2 = () => {
       if (currentBankQuestionFilter.value.length > 0) {
@@ -285,6 +307,19 @@ export default defineComponent({
           }
         });
       }
+    };
+    const addBank = async () => {
+      if (subjectID.value == "") {
+        subjectID.value = localStorage.getItem("subjectID") as string;
+      }
+      await addOrUpdateBank(
+        bankID.value,
+        currentbankName.value,
+        subjectID.value,
+        arrayAddnew.value,
+        arrayUpdate.value,
+        arrayDelete.value
+      );
     };
     const loadMathJax = () => {
       const script = document.createElement("script");
@@ -334,10 +369,22 @@ export default defineComponent({
       loadMathJax();
     };
     onMounted(async () => {
-      await getCurrentBankQuestions("64f7f457337edb68780c8d13");
+      const paramURLArray = window.location.pathname.split("/");
+      const lastParam = paramURLArray[paramURLArray.length - 1];
+
+      if (lastParam.includes("create")) {
+        updateSubjectID(lastParam.split("_")[1]);
+      } else {
+        bankID.value = lastParam;
+      }
+      await getCurrentBankQuestions(bankID.value);
       const bankName = localStorage.getItem("bankName");
-      if (bankName) {
-        currentbankName.value = bankName;
+      console.log(bankName);
+
+      if (bankName == "" || bankName == "Tạo mới") {
+        currentbankName.value = "";
+      } else {
+        currentbankName.value = bankName as string;
       }
     });
     // Caculator Data when change current page
@@ -529,6 +576,9 @@ export default defineComponent({
         (filterQuestion: any) => filterQuestion.levelQuestions.length > 0
       );
     });
+    watch([showOnlyEssay, showOnlyTheory], () => {
+      filterKey.value = "";
+    });
     return {
       openAddNewQuestionHandmadeModal,
       openSelectQuestionFromCourse,
@@ -559,6 +609,10 @@ export default defineComponent({
       showOnlyEssay,
       showOnlyTheory,
       showAll,
+      arrayUpdate,
+      arrayDelete,
+      arrayAddnew,
+      openImportFromFile,
       validateQuestion,
       handlePageSizeChange,
       updateAddNewBankModalStatus,
@@ -566,30 +620,31 @@ export default defineComponent({
       handleUpdateFilterQuestions,
       getCurrentBankQuestions,
       validatelistQuestion,
+      addBank,
     };
   },
 });
 </script>
 <style>
-body {
+#app.card-body {
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f5f5f5;
-  min-height: 100vh;
-}
-.breadcrumb {
-  color: #00000073;
-  font-size: 14px;
-  font-style: italic;
 }
 .question-detail .ql-container.ql-snow {
   min-height: 50px;
 }
 .question-bank-detail .list-question {
-  max-height: calc(100vh - 250px);
+  max-height: calc(100vh - 320px);
+  padding: 2px;
 }
 .filter-list {
   max-height: calc(100vh - 550px);
+}
+.save-button {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  border-radius: 4px;
 }
 </style>

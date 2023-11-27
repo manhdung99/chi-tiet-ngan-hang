@@ -75,13 +75,13 @@
       <span class="absolute right-2 cursor-pointer top-1"
         ><img @click="showDetail = false" class="w-8 h-8" :src="iconTop" alt=""
       /></span>
-      <span class="font-bold" v-html="question.Title"></span>
+      <span class="font-bold text-base" v-html="question.Title"></span>
       <div v-html="question.Description"></div>
       <div
         v-for="questionDetail in question.Questions"
         :key="questionDetail.ID"
       >
-        <div class="my-2" v-html="questionDetail.Content"></div>
+        <div class="my-2 font-bold" v-html="questionDetail.Content"></div>
         <div class="flex flex-col">
           <span
             v-for="(answer, index) in questionDetail.Answers"
@@ -208,15 +208,6 @@ export default defineComponent({
   background: white;
   border-radius: 4px;
   padding: 16px;
-}
-.card {
-  background: #f5f5f5;
-  border-radius: 4px;
-  padding: 16px 20px;
-  min-width: 300px;
-  margin-bottom: 16px;
-  margin-right: 16px;
-  cursor: pointer;
 }
 .question-detail p {
   margin: 0;

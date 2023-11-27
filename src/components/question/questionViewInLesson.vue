@@ -8,7 +8,7 @@
     </span>
     <input
       v-if="!isFillDesOnetime"
-      v-model="partQuestionDetail.Description"
+      v-model="partQuestionDetail.TagsName"
       class="input mr-2 w-1/4"
       type="text"
       placeholder="Nội dung"
@@ -61,7 +61,7 @@ export default defineComponent({
   },
   setup(props) {
     const { updateAddNewBankModalStatus } = usePopupStore();
-    const { descriptionOneTime, isFillDesOnetime } = storeToRefs(
+    const { tagsNameOneTime, isFillDesOnetime } = storeToRefs(
       useSelectQuestionStore()
     );
     // Remove the initialization of question with props.questionPart
@@ -74,6 +74,7 @@ export default defineComponent({
       TypePart: 1,
       LevelPart: 1,
       Questions: [],
+      TagsName: "",
     });
     const { currentSelectedQuestion } = storeToRefs(useSelectQuestionStore());
     const showDetail = ref(false);
@@ -81,7 +82,7 @@ export default defineComponent({
     const currentSelectedQuestionsID = ref<Array<string>>([]);
     const updateListSelectedQuestion = () => {
       if (isFillDesOnetime) {
-        partQuestionDetail.value.Description = descriptionOneTime.value;
+        partQuestionDetail.value.TagsName = tagsNameOneTime.value;
       }
       if (
         currentSelectedQuestion.value.length > 0 &&
@@ -129,7 +130,7 @@ export default defineComponent({
       iconTop,
       partQuestionDetail,
       currentSelectedQuestion,
-      descriptionOneTime,
+      tagsNameOneTime,
       isFillDesOnetime,
       currentSelectedQuestionsID,
       updateAddNewBankModalStatus,
@@ -144,15 +145,6 @@ export default defineComponent({
   background: white;
   border-radius: 4px;
   padding: 16px;
-}
-.card {
-  background: #f5f5f5;
-  border-radius: 4px;
-  padding: 16px 20px;
-  min-width: 300px;
-  margin-bottom: 16px;
-  margin-right: 16px;
-  cursor: pointer;
 }
 .question-detail p {
   margin: 0;

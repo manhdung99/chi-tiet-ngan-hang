@@ -27,3 +27,20 @@ export const changeMathJaxDes = (des: string) => {
   }
   return des;
 };
+export const flattenObject = (formData: FormData, obj: any, prefix = "") => {
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const propName = prefix ? `${prefix}.${key}` : key;
+      if (Array.isArray(obj[key])) {
+        // If it's an array, iterate over each item in the array
+        obj[key].forEach((item: any, index: number) => {
+          flattenObject(formData, item, `${propName}[${index}]`); // Pass formData as the first argument
+        });
+      } else if (typeof obj[key] === "object" && obj[key] !== null) {
+        flattenObject(formData, obj[key], propName); // Pass formData as the first argument
+      } else {
+        formData.append(propName, obj[key]);
+      }
+    }
+  }
+};

@@ -201,6 +201,7 @@ export default defineComponent({
     const { getBanks, getTagQuiz, getListPart } = useSelectQuestionFromBank();
     const { bankList } = storeToRefs(useSelectQuestionFromBank());
     const { addQuestionToCurrentList } = useQuestionBankStore();
+    const { arrayAddnew } = storeToRefs(useQuestionBankStore());
     const answerListQuiz2 = ref<Answer[]>([]);
     const openListSelected = ref(false);
     const toggleTag = (obj: Bank) => {
@@ -217,6 +218,10 @@ export default defineComponent({
     };
     const saveData = () => {
       addQuestionToCurrentList(currentQuestionPartSelected.value);
+      arrayAddnew.value = [
+        ...arrayAddnew.value,
+        ...currentQuestionPartSelected.value,
+      ];
       currentQuestionPartSelected.value = [];
       updateSelectQuestionFromBankStatus(false);
     };

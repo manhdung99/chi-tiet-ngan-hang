@@ -1,6 +1,9 @@
 export const addStaticLink = (description: string | null) => {
   if (description) {
-    if (!description.includes('src="http')) {
+    if (
+      !description.includes('src="http') &&
+      !description.includes(`src='http`)
+    ) {
       description = description.replaceAll(
         `src="`,
         `src="https://static.eduso.vn`

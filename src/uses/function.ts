@@ -33,7 +33,6 @@ export async function uploadImageAPI(img: any) {
     if (response.status === 200) {
       // Image upload was successful
       const img_url = response.data.data.url;
-      console.log("Image URL:", img_url);
       return img_url;
     } else {
       console.error("Image upload failed. Response status:", response.status);

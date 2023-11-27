@@ -95,7 +95,7 @@
           :src="iconTop"
           alt=""
       /></span>
-      <span class="font-bold" v-html="question.Title"></span>
+      <span class="font-bold text-base" v-html="question.Title"></span>
       <div v-if="!isEdit" v-html="question.Description"></div>
       <CKEditorCustom
         v-if="isEdit && question.Description"
@@ -106,7 +106,7 @@
         v-for="questionDetail in question.Questions"
         :key="questionDetail.ID"
       >
-        <div class="my-2" v-html="questionDetail.Content"></div>
+        <div class="my-2 font-bold" v-html="questionDetail.Content"></div>
         <div class="flex flex-col">
           <span
             v-for="(answer, index) in questionDetail.Answers"
@@ -175,7 +175,7 @@
           </button>
           <button
             @click="
-              updateQuestionInQuestionList(question);
+              updateQuestion(question);
               isEdit = false;
             "
             class="button button-primary"
@@ -245,6 +245,8 @@ export default defineComponent({
       questionDeleteIndex,
       questionDuplicateID,
       questionDuplicateIndex,
+      arrayUpdate,
+      arrayAddnew,
     } = storeToRefs(useQuestionBankStore());
     const { updateQuestionInQuestionList } = useQuestionBankStore();
 
@@ -255,7 +257,23 @@ export default defineComponent({
         updateQuestionInQuestionList(question.value);
       }
     };
-
+    const updateQuestion = (question: PartQuestion) => {
+      updateQuestionInQuestionList(question);
+      if (question) {
+        updateQuestionInQuestionList(question);
+        const questionInAddlist = arrayAddnew.value.find(
+          (data) => data.ID == question.ID
+        );
+        if (questionInAddlist) {
+          const partIndex = arrayAddnew.value.findIndex(
+            (data) => data.ID == questionInAddlist.ID
+          );
+          arrayAddnew.value[partIndex] = questionInAddlist;
+        } else {
+          arrayUpdate.value = [...arrayUpdate.value, question];
+        }
+      }
+    };
     onMounted(() => {
       // Set the question ref to a deep copy of props.questionPart
       question.value = JSON.parse(JSON.stringify(props.questionPart));
@@ -309,6 +327,7 @@ export default defineComponent({
       updateQuestionInQuestionList,
       updateDuplicateQuestionModalStatus,
       resetData,
+      updateQuestion,
     };
   },
 });

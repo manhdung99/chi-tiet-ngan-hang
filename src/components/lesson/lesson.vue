@@ -5,10 +5,7 @@
       class="text-red-500 text-sm flex font-medium py-2 items-center cursor-pointer"
     >
       {{ lesson.Title }}
-      <span
-        @click="showListQuestion = !showListQuestion"
-        class="ml-1 cursor-pointer"
-        :id="`icon-lesson-${lesson.ID}`"
+      <span class="ml-1 cursor-pointer" :id="`icon-lesson-${lesson.ID}`"
         ><img
           class="w-6 h-6"
           :src="showListQuestion ? arrowTop : arrowDown"
@@ -47,14 +44,11 @@ export default defineComponent({
   setup() {
     const showListQuestion = ref(false);
     const { listLessonParts } = storeToRefs(useSelectQuestionStore());
-
+    const { loadPartQuestions } = useSelectQuestionStore();
     const toggleLesson = async (obj: Lesson) => {
       if (obj.partQuestion == null) {
-        obj.partQuestion = listLessonParts.value.filter((lessonPart) => {
-          return lessonPart.ParentID == obj.ID;
-        });
+        obj.partQuestion = await loadPartQuestions(obj.ID);
       }
-
       const currentElement = document.getElementById(`lesson-${obj.ID}`);
       const iconElement = document.getElementById(`icon-lesson-${obj.ID}`);
       if (currentElement && iconElement) {

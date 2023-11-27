@@ -14,3 +14,16 @@
 :where(.css-dev-only-do-not-override-185kyl0).ant-select-dropdown {
     min-width: 100px !important;
 }
+
+:where(.css-1qb1s0s).ant-pagination .ant-pagination-item {
+    line-height: normal !important;
+    height: auto !important;
+}
+
+:where(.css-1qb1s0s).ant-pagination .ant-pagination-prev,
+:where(.css-1qb1s0s).ant-pagination .ant-pagination-next,
+:where(.css-1qb1s0s).ant-pagination .ant-pagination-jump-prev,
+:where(.css-1qb1s0s).ant-pagination .ant-pagination-jump-next {
+    line-height: normal !important;
+    height: auto !important;
+}

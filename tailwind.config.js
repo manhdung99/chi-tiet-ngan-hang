@@ -52,6 +52,7 @@ export default {
       spacing: {
         12.5: "3.125rem",
         15: "3.75rem",
+        23: "5.75rem",
         40: "10rem",
         42: "10.5rem",
         50: "12.5rem",

@@ -10,4 +10,5 @@ export default interface PartQuestion {
   ParentID?: string;
   Questions: Array<any>;
   validateError?: boolean;
+  TagsName?: String;
 }

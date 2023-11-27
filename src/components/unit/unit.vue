@@ -2,7 +2,7 @@
   <div class="">
     <p
       @click="toggleUnit(unit as Unit)"
-      class="text-blue-500 font-semibold ml-5 flex items-center cursor-pointer"
+      class="text-blue-500 font-semibold ml-6 flex items-center cursor-pointer"
     >
       <span class="mr-2"><img class="w-6 h-6" :src="folderIcon" alt="" /></span
       >{{ unit.Name }}
@@ -14,7 +14,7 @@
           alt=""
       /></span>
     </p>
-    <div class="hidden ml-8" :id="`unit-${unit.ID}`">
+    <div class="hidden ml-9" :id="`unit-${unit.ID}`">
       <LessonVue
         v-for="lesson in unit.Lessons"
         :key="lesson.ID"

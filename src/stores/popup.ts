@@ -11,6 +11,7 @@ export const usePopupStore = defineStore("popupStore", {
     openAddNewQuestionHandmadeModal: false,
     openSelectQuestionFromCourse: false,
     openSelectQuestionFromBank: false,
+    openImportFromFile: false,
     deleteKey: "",
     duplicateKey: "",
     isLoading: false,
@@ -45,6 +46,9 @@ export const usePopupStore = defineStore("popupStore", {
     },
     updateStatisticsBankModalStatus(status: boolean) {
       this.openStatisticsBankModal = status;
+    },
+    updateOpenImportFromFileModalStatus(status: boolean) {
+      this.openImportFromFile = status;
     },
     updateLoading(status: boolean) {
       this.isLoading = status;
