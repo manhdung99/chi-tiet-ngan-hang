@@ -232,6 +232,9 @@ export default defineComponent({
       currentListPartQuestion.value = await getListPart(bank, tag);
       currentListPartQuestion.value.forEach((part) => {
         part.Description = addStaticLink(part.Description);
+        part.Questions.forEach((question) => {
+          question.Content = addStaticLink(question.Content);
+        });
       });
       createListAnswerQuiz2();
       isLoading.value = false;

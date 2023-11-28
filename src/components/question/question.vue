@@ -45,7 +45,14 @@
       v-show="!showDetail && !showAll"
       class="p-4 text-sm text-gray-600 flex justify-between"
     >
-      <span class="max-w-4/5" v-if="question.Title || question.Description">
+      <span
+        class="max-w-4/5"
+        v-if="
+          question.Title != 'null' &&
+          question.Description != 'null' &&
+          (question.Title != null || question.Description != null)
+        "
+      >
         <span v-if="question.Title" v-html="question.Title"></span>
         <span class="ellipsis" v-else v-html="question.Description"></span>
       </span>
