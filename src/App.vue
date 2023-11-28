@@ -1,10 +1,10 @@
 <template>
   <div class="question-bank-detail">
-    <!-- <div class="save-button">
+    <div class="save-button">
       <button @click="addBank" class="button button-primary">Lưu</button>
-    </div> -->
+    </div>
     <!-- Header page  -->
-    <div class="page-header bg-white px-6 py-5">
+    <!-- <div class="page-header bg-white px-6 py-5">
       <span class="breadcrumb">Home/ Khảo thí / Tiếng Anh</span>
       <div class="flex justify-between items-center">
         <div class="font-semibold text-xl flex items-center">
@@ -18,8 +18,8 @@
         </div>
       </div>
     </div>
-    <div class="page-body relative p-6 pb-0">
-      <!-- <div class="page-body relative pb-0"> -->
+    <div class="page-body relative p-6 pb-0"> -->
+    <div class="page-body relative pb-0">
       <div class="flex justify-between">
         <!-- Question  -->
         <div class="flex-1 mr-9">
@@ -84,7 +84,8 @@
             Thêm câu hỏi
           </button>
           <button
-            class="button bg-white text-red-500 border border-gray-300 mt-4"
+            @click="openRemoveModal = true"
+            class="button bg-white text-red-500 border border-gray-300 hover:border-red-500 mt-4"
           >
             Xoá ngân hàng
           </button>
@@ -212,6 +213,41 @@
       <img :src="loadingIcon" alt="" />
     </div>
   </Teleport>
+  <!-- Remove modal  -->
+  <Teleport to="body">
+    <div
+      v-if="openRemoveModal"
+      class="fixed top-0 bottom-0 right-0 left-0 flex justify-center items-center bg-custom-modal z-10"
+    >
+      <div>Bạn chắc chắn muốn xóa ngân hàng ?</div>
+      <div>
+        <div
+          class="w-80 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-lg z-10"
+        >
+          <h2 class="mb-4">
+            Bạn có chắc chắn muốn xoá ngân hàng
+            <span class="text-red font-bold"> {{ currentbankName }} </span>?
+          </h2>
+          <div class="flex justify-end">
+            <button
+              class="bg-red-500 text-white py-2 px-4 rounded mr-4 hover:opacity-90"
+            >
+              Xoá
+            </button>
+            <button
+              @click="openRemoveModal = false"
+              class="bg-blue-500 text-white py-2 px-4 rounded hover:opacity-90"
+            >
+              Hủy bỏ
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Teleport>
+  <Teleport to="body">
+    <addNewSuccess v-if="openAddnewSuccess" :subjectID="subjectID" />
+  </Teleport>
 </template>
 
 <script lang="ts">
@@ -229,6 +265,7 @@ import selectQuestionFromCourse from "@/components/popup/selectQuestionFromCours
 import SelectQuestionFromBank from "@/components/popup/selectQuestionFromBank.vue";
 import ImportFromFile from "@/components/popup/importQuestionFromFile.vue";
 import statisticsPopup from "@/components/popup/statisticsPopup.vue";
+import addNewSuccess from "./components/popup/addNewSuccess.vue";
 import loadingIcon from "./assets/image/loading-gif.gif";
 import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
@@ -251,6 +288,7 @@ export default defineComponent({
     SelectQuestionFromBank,
     ImportFromFile,
     statisticsPopup,
+    addNewSuccess,
   },
   setup() {
     const {
@@ -262,14 +300,17 @@ export default defineComponent({
       openSelectQuestionFromBank,
       openStatisticsBankModal,
       openImportFromFile,
+      openAddnewSuccess,
     } = storeToRefs(usePopupStore());
-    const { updateAddNewBankModalStatus } = usePopupStore();
+    const { updateAddNewBankModalStatus, updateAddNewSuccessStatus } =
+      usePopupStore();
     const { isLoading } = storeToRefs(usePopupStore());
     const {
       getCurrentBankQuestions,
       deleteQuestion,
       updateSubjectID,
       addOrUpdateBank,
+      removeBankByID,
     } = useQuestionBankStore();
     const {
       currentBankQuestions,
@@ -292,6 +333,7 @@ export default defineComponent({
     const filterArray = ref();
     const filterKey = ref("");
     const bankID = ref("");
+    const openRemoveModal = ref(false);
     const currentbankName = ref("");
     const createListAnswerQuiz2 = () => {
       if (currentBankQuestionFilter.value.length > 0) {
@@ -312,6 +354,9 @@ export default defineComponent({
       if (subjectID.value == "") {
         subjectID.value = localStorage.getItem("subjectID") as string;
       }
+      arrayAddnew.value = arrayAddnew.value.map((data) => {
+        return { ...data, ID: "" };
+      });
       await addOrUpdateBank(
         bankID.value,
         currentbankName.value,
@@ -320,6 +365,17 @@ export default defineComponent({
         arrayUpdate.value,
         arrayDelete.value
       );
+      updateAddNewSuccessStatus(true);
+    };
+    const removeBank = async () => {
+      const url =
+        window.location.origin +
+        "/eduso/teacher/ExamManage#quiz_" +
+        subjectID.value;
+      if (bankID.value != "") {
+        await removeBankByID(bankID.value);
+      }
+      window.location.replace(url);
     };
     const loadMathJax = () => {
       const script = document.createElement("script");
@@ -379,8 +435,6 @@ export default defineComponent({
       }
       await getCurrentBankQuestions(bankID.value);
       const bankName = localStorage.getItem("bankName");
-      console.log(bankName);
-
       if (bankName == "" || bankName == "Tạo mới") {
         currentbankName.value = "";
       } else {
@@ -564,6 +618,7 @@ export default defineComponent({
           ],
         },
       ];
+      console.log(filterArray.value);
       filterArray.value = filterArray.value.map((filterQuestion: any) => {
         filterQuestion.typeQuestions = filterQuestion.typeQuestions.filter(
           (question: any) => {
@@ -572,9 +627,11 @@ export default defineComponent({
         );
         return filterQuestion;
       });
+      console.log(filterArray.value);
       filterArray.value = filterArray.value.filter(
         (filterQuestion: any) => filterQuestion.levelQuestions.length > 0
       );
+      console.log(filterArray.value);
     });
     watch([showOnlyEssay, showOnlyTheory], () => {
       filterKey.value = "";
@@ -612,7 +669,10 @@ export default defineComponent({
       arrayUpdate,
       arrayDelete,
       arrayAddnew,
+      openRemoveModal,
       openImportFromFile,
+      subjectID,
+      openAddnewSuccess,
       validateQuestion,
       handlePageSizeChange,
       updateAddNewBankModalStatus,
@@ -621,6 +681,7 @@ export default defineComponent({
       getCurrentBankQuestions,
       validatelistQuestion,
       addBank,
+      removeBank,
     };
   },
 });
