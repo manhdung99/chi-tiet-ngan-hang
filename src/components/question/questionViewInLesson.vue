@@ -41,7 +41,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import { usePopupStore } from "../../stores/popup";
 import { useSelectQuestionStore } from "../../stores/question-select-flow-store";
 import editIcon from "../../assets/image/edit.svg";
@@ -110,6 +110,11 @@ export default defineComponent({
         (question) => question.ID
       );
     };
+    watch([tagsNameOneTime, isFillDesOnetime], () => {
+      if (isFillDesOnetime) {
+        partQuestionDetail.value.TagsName = tagsNameOneTime.value;
+      }
+    });
     onMounted(() => {
       partQuestionDetail.value = {
         ...props.question,

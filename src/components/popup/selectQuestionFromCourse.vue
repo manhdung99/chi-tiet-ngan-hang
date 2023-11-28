@@ -50,7 +50,7 @@
               :disabled="!isFillDesOnetime"
               class="input w-1/2"
               type="text"
-              placeholder="Tìm kiếm"
+              placeholder="Nội dung "
               v-model="tagsNameOneTime"
             />
           </div>
@@ -1241,6 +1241,15 @@ export default defineComponent({
     });
     watch(level, () => {
       getCourseData(program.value, level.value);
+    });
+    watch([tagsNameOneTime, isFillDesOnetime], () => {
+      if (isFillDesOnetime) {
+        currentSelectedQuestion.value = currentSelectedQuestion.value.map(
+          (question) => {
+            return { ...question, TagsName: tagsNameOneTime.value };
+          }
+        );
+      }
     });
     return {
       closeIcon,
