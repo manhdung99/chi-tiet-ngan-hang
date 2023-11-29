@@ -27,7 +27,7 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       popup.isLoading = true;
       const url =
         process.env.VUE_APP_BASE_URL +
-        "eduso/teacher/ExamManage/GetListQuestionArchive";
+        process.env.VUE_APP_GET_LIST_QUESTION_ARCHIVE;
       const params = new FormData();
       if (this.subjectID == "") {
         params.append("MainSubjectID", "6073df26c549a13e4c631636");
@@ -38,10 +38,7 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
         params.append("SearchText", searchText);
       }
       const response = await axios.post(url, params, {
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
-        },
+        withCredentials: true,
       });
       if (response) {
         this.listBankQuestion = response.data.Data;
@@ -67,17 +64,22 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       popUp.isLoading = true;
       if (id && id.length > 0) {
         const url =
-          process.env.VUE_APP_BASE_URL + "eduso/teacher/ExamManage/GetListPart";
+          process.env.VUE_APP_BASE_URL +
+          process.env.VUE_APP_GET_LIST_PART_EXAMMANAGER;
         const params = new FormData();
         params.append("ID", id);
         const response = await axios.post(url, params, {
-          headers: {
-            Authorization:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
-          },
+          withCredentials: true,
         });
         if (response) {
           this.currentBankQuestions = response.data.Data;
+          this.currentBankQuestions = this.currentBankQuestions.map((part) => {
+            let tagName = "";
+            part.ListTags?.forEach((data) => {
+              tagName = tagName + data.name;
+            });
+            return { ...part, TagsName: tagName };
+          });
         }
       } else {
         this.currentBankQuestions = [];
@@ -108,7 +110,9 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
         (question) => question.ID == data.ID
       );
       if (index >= 0) {
-        this.currentBankQuestions[index] = data;
+        const bankQuestions = [...this.currentBankQuestions];
+        bankQuestions[index] = data;
+        this.currentBankQuestions = [...bankQuestions];
       }
     },
     updateSubjectID(id: string) {
@@ -126,29 +130,11 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       arrayDelete: Array<string>
     ) {
       const url =
-        process.env.VUE_APP_BASE_URL + "eduso/teacher/ExamManage/Save";
+        process.env.VUE_APP_BASE_URL + process.env.VUE_APP_SAVE_BANK_DATA;
       const formData = new FormData();
       formData.append("ID", bankID);
       formData.append("Name", currentbankName);
       formData.append("MainSubjectID", subjectID);
-
-      // const flattenObject = (obj: any, prefix = "") => {
-      //   for (const key in obj) {
-      //     if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      //       const propName = prefix ? `${prefix}.${key}` : key;
-      //       if (Array.isArray(obj[key])) {
-      //         // If it's an array, iterate over each item in the array
-      //         obj[key].forEach((item: any, index: number) => {
-      //           flattenObject(item, `${propName}[${index}]`);
-      //         });
-      //       } else if (typeof obj[key] === "object" && obj[key] !== null) {
-      //         flattenObject(obj[key], propName);
-      //       } else {
-      //         formData.append(propName, obj[key]);
-      //       }
-      //     }
-      //   }
-      // };
 
       addnewArray.forEach((obj: any, index: number) => {
         flattenObject(formData, obj, `createList[${index}]`);
@@ -161,10 +147,22 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       });
 
       const response = await axios.post(url, formData, {
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
-        },
+        withCredentials: true,
+      });
+      if (response.data.Data) {
+        this.arrayAddnew = [];
+        this.arrayUpdate = [];
+        this.arrayAddnew = [];
+        console.log(response);
+      }
+    },
+    async removeBankByID(id: string) {
+      const url =
+        process.env.VUE_APP_BASE_URL + process.env.VUE_APP_REMOVE_BANK;
+      const formData = new FormData();
+      formData.append("IDs", id);
+      const response = await axios.post(url, formData, {
+        withCredentials: true,
       });
       if (response) {
         console.log(response);

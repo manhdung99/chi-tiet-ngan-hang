@@ -12,6 +12,7 @@ export const usePopupStore = defineStore("popupStore", {
     openSelectQuestionFromCourse: false,
     openSelectQuestionFromBank: false,
     openImportFromFile: false,
+    openAddnewSuccess: false,
     deleteKey: "",
     duplicateKey: "",
     isLoading: false,
@@ -52,6 +53,9 @@ export const usePopupStore = defineStore("popupStore", {
     },
     updateLoading(status: boolean) {
       this.isLoading = status;
+    },
+    updateAddNewSuccessStatus(status: boolean) {
+      this.openAddnewSuccess = status;
     },
   },
 });

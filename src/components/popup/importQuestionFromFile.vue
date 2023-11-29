@@ -236,13 +236,10 @@ export default defineComponent({
       // Make the API call using axios
       await axios
         .post(
-          "https://alpha.eduso.vn/eduso/teacher/LessonPartExam/ImportFromWordV2",
+          process.env.VUE_APP_BASE_URL + process.env.VUE_APP_IMPORT_FILE,
           formData,
           {
-            headers: {
-              Authorization:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
-            },
+            withCredentials: true,
           }
         )
         .then((response) => {

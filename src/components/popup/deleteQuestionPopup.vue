@@ -36,12 +36,14 @@ import { usePopupStore } from "../../stores/popup";
 import { useQuestionBankStore } from "../../stores/question-bank-store";
 import { storeToRefs } from "pinia";
 import { useSelectQuestionStore } from "../../stores/question-select-flow-store";
+import PartQuestion from "@/type/partQuestion";
 export default defineComponent({
   name: "DeleteQuestionPopup",
   setup() {
     const { updateDeleteQuestionModalStatus } = usePopupStore();
     const { deleteKey } = storeToRefs(usePopupStore());
     const { deleteQuestion } = useQuestionBankStore();
+    const { arrayDelete, arrayAddnew } = storeToRefs(useQuestionBankStore());
     const { deleteSelectedQuestion } = useSelectQuestionStore();
     const { questionDeleteID, questionDeleteIndex } = storeToRefs(
       useQuestionBankStore()
@@ -51,6 +53,16 @@ export default defineComponent({
         deleteSelectedQuestion(id);
       } else if (deleteKey.value == "mainQuestion") {
         deleteQuestion(id);
+        const currentQuestion = arrayAddnew.value.find(
+          (question) => question.ID == id
+        ) as PartQuestion;
+        if (currentQuestion) {
+          arrayAddnew.value = arrayAddnew.value.filter(
+            (question) => question.ID != currentQuestion.ID
+          );
+        } else {
+          arrayDelete.value = [...arrayDelete.value, id];
+        }
       }
     };
     return {

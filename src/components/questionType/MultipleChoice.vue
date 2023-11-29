@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="questionDetail"
     class="border border-dashed border-gray-300 relative p-2.5 pt-5 mutiple-choice mb-5"
   >
     <div>
@@ -85,6 +86,7 @@ import { defineComponent, onMounted, ref, watch } from "vue";
 import binIcon from "../../assets/image/noun-bin.svg";
 import Answer from "../../type/answer";
 import CKEditorCustom from "../custom/CKEditorCustom.vue";
+import Question from "@/type/question";
 export default defineComponent({
   name: "MultipleChoice",
   components: {
@@ -112,6 +114,7 @@ export default defineComponent({
   setup(props) {
     const answerIndex = ref(0);
     const answerArray = ref<Answer[]>([]);
+    const questionDetail = ref<Question>();
     const questionContent = ref("");
     const addNewAnswer = () => {
       const id = "id" + Math.random().toString(16).slice(2);
@@ -136,11 +139,18 @@ export default defineComponent({
     watch(questionContent, () => {
       props.updateQuestionContent(props.question.ID, questionContent.value);
     });
+    onMounted(() => {
+      questionDetail.value = JSON.parse(JSON.stringify(props.question));
+      questionContent.value = JSON.parse(
+        JSON.stringify(props.question.Content ? props.question.Content : "")
+      );
+    });
     return {
       answerIndex,
       answerArray,
       binIcon,
       questionContent,
+      questionDetail,
       addNewAnswer,
       removeAnswer,
     };

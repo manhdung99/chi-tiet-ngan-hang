@@ -51,6 +51,7 @@
               :canEdit="true"
               :answerListQuiz2="answerListQuiz2"
               :showAll="showAll"
+              :currentBankQuestionFilter="currentBankQuestionFilter"
             />
           </div>
           <div
@@ -350,6 +351,7 @@ export default defineComponent({
         });
       }
     };
+    // Save bank to DB
     const addBank = async () => {
       if (subjectID.value == "") {
         subjectID.value = localStorage.getItem("subjectID") as string;
@@ -367,6 +369,7 @@ export default defineComponent({
       );
       updateAddNewSuccessStatus(true);
     };
+    // Remove bank and back to list
     const removeBank = async () => {
       const url =
         window.location.origin +
@@ -377,6 +380,7 @@ export default defineComponent({
       }
       window.location.replace(url);
     };
+    //Load Mathjax
     const loadMathJax = () => {
       const script = document.createElement("script");
       script.type = "text/javascript";
@@ -393,33 +397,42 @@ export default defineComponent({
         }
       };
     };
+    //Question type Nhận biết
     const basicQuestions = computed(() =>
       currentBankQuestions.value.filter((question) => question.LevelPart === 1)
     );
+    //Question type thông hiểu
     const mediumQuestions = computed(() =>
       currentBankQuestions.value.filter((question) => question.LevelPart === 2)
     );
+    //Question type vận dụng
     const advanceQuestions = computed(() =>
       currentBankQuestions.value.filter((question) => question.LevelPart === 3)
     );
+    //Question type vận dụng cao
     const hardQuestions = computed(() =>
       currentBankQuestions.value.filter((question) => question.LevelPart === 4)
     );
+    //Question lý thuyết
     const theoryQuestions = computed(() =>
       currentBankQuestions.value.filter((question) => question.Type != "ESSAY")
     );
+    //Question bài tập
     const essayQuestions = computed(() =>
       currentBankQuestions.value.filter((question) => question.Type == "ESSAY")
     );
+    //Get question by QUIZ
     const getQuestionsByType = (questions: PartQuestion[], type: string) => {
       return questions.filter((question) => question.Type === type);
     };
+    // Update pagination and key when filter
     const handleUpdateFilterQuestions = (data: PartQuestion[], key: string) => {
       filterKey.value = key;
       currentBankQuestionFilter.value = data;
       pageLength.value = currentBankQuestionFilter.value.length;
       caculatorData(1);
     };
+    //Load Mathjax when change content
     const handleContentChange = () => {
       // Load MathJax for the new content
       loadMathJax();
@@ -468,15 +481,17 @@ export default defineComponent({
     watch(
       [currentBankQuestions, currentPage, showOnlyEssay, showOnlyTheory],
       async () => {
+        let partQuestions = [];
         if (showOnlyEssay.value || showOnlyTheory.value) {
           if (showOnlyEssay.value) {
-            currentBankQuestionFilter.value = essayQuestions.value;
+            partQuestions = essayQuestions.value;
           } else {
-            currentBankQuestionFilter.value = theoryQuestions.value;
+            partQuestions = theoryQuestions.value;
           }
         } else {
-          currentBankQuestionFilter.value = currentBankQuestions.value;
+          partQuestions = currentBankQuestions.value;
         }
+        currentBankQuestionFilter.value = [...partQuestions];
         pageLength.value = currentBankQuestionFilter.value.length;
         if (currentBankQuestionFilter.value.length <= pageSize.value) {
           caculatorData(1);
@@ -618,7 +633,6 @@ export default defineComponent({
           ],
         },
       ];
-      console.log(filterArray.value);
       filterArray.value = filterArray.value.map((filterQuestion: any) => {
         filterQuestion.typeQuestions = filterQuestion.typeQuestions.filter(
           (question: any) => {
@@ -627,11 +641,9 @@ export default defineComponent({
         );
         return filterQuestion;
       });
-      console.log(filterArray.value);
       filterArray.value = filterArray.value.filter(
         (filterQuestion: any) => filterQuestion.levelQuestions.length > 0
       );
-      console.log(filterArray.value);
     });
     watch([showOnlyEssay, showOnlyTheory], () => {
       filterKey.value = "";

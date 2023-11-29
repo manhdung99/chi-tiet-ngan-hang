@@ -66,10 +66,13 @@
             :key="answer.ID"
             class="mb-2.5"
           >
-            <span :class="answer.IsCorrect ? 'text-green font-bold' : ''"
+            <span
+              v-if="question.Type != 'QUIZ2'"
+              :class="answer.IsCorrect ? 'text-green font-bold' : ''"
               >{{ index + 1 }}.</span
             >
             <span
+              v-if="question.Type != 'QUIZ2'"
               :class="answer.IsCorrect ? 'text-green font-bold' : ''"
               v-html="answer.Content"
             ></span>

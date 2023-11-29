@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-modal">
+  <div class="custom-modal select-bank-custom-modal-content">
     <div
       v-if="!openListSelected"
       class="bg-white rounded-sm select-question-from-bank max-h-screen w-full relative"
@@ -331,7 +331,7 @@ export default defineComponent({
   background: rgba(0, 0, 0, 0.1);
 }
 .select-bank-custom-modal-content {
-  max-height: calc(100vh - 80px);
+  max-height: 100vh;
   overflow: hidden;
 }
 .select-bank-custom-modal-content-part2 {

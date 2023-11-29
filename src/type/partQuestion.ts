@@ -1,4 +1,5 @@
 import Media from "./media";
+import Tag from "./tag";
 export default interface PartQuestion {
   ID: string;
   Description: string | null;
@@ -11,4 +12,5 @@ export default interface PartQuestion {
   Questions: Array<any>;
   validateError?: boolean;
   TagsName?: String;
+  ListTags?: Array<Tag>;
 }

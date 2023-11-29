@@ -93,22 +93,17 @@
       class="p-4 pt-8 text-gray-600 text-sm relative"
     >
       <span class="absolute right-2 cursor-pointer top-1"
-        ><img
-          @click="
-            showDetail = false;
-            isEdit = false;
-          "
-          class="w-8 h-8"
-          :src="iconTop"
-          alt=""
+        ><img @click="showDetail = false" class="w-8 h-8" :src="iconTop" alt=""
       /></span>
-      <span class="font-bold text-base" v-html="question.Title"></span>
-      <div v-if="!isEdit" v-html="question.Description"></div>
-      <CKEditorCustom
-        v-if="isEdit && question.Description"
-        :model-value="question.Description"
-        @update:model-value="(newValue:any) => (question.Description = newValue)"
-      />
+      <span
+        class="font-bold text-base"
+        v-if="question.Title != null && question.Title != 'null'"
+        v-html="question.Title"
+      ></span>
+      <div v-if="question.Media != null">
+        <audio :src="question.Media.Path" :controls="true"></audio>
+      </div>
+      <div v-html="question.Description"></div>
       <div
         v-for="questionDetail in question.Questions"
         :key="questionDetail.ID"
@@ -118,8 +113,7 @@
           <span
             v-for="(answer, index) in questionDetail.Answers"
             :key="answer.ID"
-            class="mb-2.5"
-            :class="!isEdit ? 'flex' : ''"
+            class="mb-2.5 flex"
           >
             <span
               v-if="question.Type != 'QUIZ2'"
@@ -128,20 +122,15 @@
             >
             <span
               :class="answer.IsCorrect ? 'text-green font-bold' : ''"
-              v-if="!isEdit && question.Type != 'QUIZ2'"
+              v-if="question.Type != 'QUIZ2'"
               v-html="answer.Content"
             ></span>
-            <CKEditorCustom
-              v-if="isEdit"
-              :model-value="answer.Content"
-              @update:model-value="(newValue:any) => (answer.Content = newValue)"
-            />
           </span>
         </div>
       </div>
       <!-- Bottom  -->
       <div class="flex justify-end mt-2">
-        <div v-if="!isEdit" class="flex">
+        <div class="flex">
           <span
             v-if="canEdit"
             @click="isEdit = true"
@@ -170,32 +159,18 @@
             <img :src="removeIcon" alt="" />
           </span>
         </div>
-        <div v-else>
-          <button
-            @click="
-              resetData();
-              isEdit = false;
-            "
-            class="button bg-white text-red-500 border border-gray-300 mr-3 w-15"
-          >
-            Huỷ
-          </button>
-          <button
-            @click="
-              updateQuestion(question);
-              isEdit = false;
-            "
-            class="button button-primary"
-          >
-            Lưu
-          </button>
-        </div>
       </div>
     </div>
   </div>
+  <Teleport v-if="question && isEdit" to="body">
+    <editQuestionHandmade
+      :questionPart="questionPart"
+      :closeEditModal="closeEditModal"
+    />
+  </Teleport>
 </template>
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, ref } from "vue";
+import { defineComponent, nextTick, onMounted, ref, watch } from "vue";
 import { usePopupStore } from "../../stores/popup";
 import { useQuestionBankStore } from "../../stores/question-bank-store";
 import editIcon from "../../assets/image/edit.svg";
@@ -205,15 +180,15 @@ import removeIcon from "../../assets/image/removeIcon.svg";
 import iconTop from "../../assets/image/top-arrow.svg";
 import { storeToRefs } from "pinia";
 import PartQuestion from "../../type/partQuestion";
-import CKEditorCustom from "../custom/CKEditorCustom.vue";
 import { addStaticLink } from "../../uses/addStaticLink";
 import { changeMathJaxDes } from "../../uses/convertData";
+import editQuestionHandmade from "../popup/editQuestionHandmade.vue";
 import Answer from "../../type/answer";
 
 export default defineComponent({
   name: "QuestionVue",
   components: {
-    CKEditorCustom,
+    editQuestionHandmade,
   },
   props: {
     index: {
@@ -236,6 +211,10 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    currentBankQuestionFilter: {
+      type: Array,
+      required: true,
+    },
   },
   setup(props) {
     const {
@@ -254,9 +233,12 @@ export default defineComponent({
       questionDuplicateIndex,
       arrayUpdate,
       arrayAddnew,
+      currentBankQuestions,
     } = storeToRefs(useQuestionBankStore());
     const { updateQuestionInQuestionList } = useQuestionBankStore();
-
+    const closeEditModal = () => {
+      isEdit.value = false;
+    };
     const resetData = () => {
       // Reset the question ref to a deep copy of props.questionPart
       question.value = defaultQuestion.value;
@@ -281,6 +263,26 @@ export default defineComponent({
         }
       }
     };
+    watch(currentBankQuestions, () => {
+      question.value = JSON.parse(JSON.stringify(props.questionPart));
+      if (question.value) {
+        question.value.Description = addStaticLink(question.value.Description);
+        question.value.Description = changeMathJaxDes(
+          question.value.Description
+        );
+        question.value.Questions.forEach((questionDetail) => {
+          questionDetail.Content = changeMathJaxDes(questionDetail.Content);
+          questionDetail.Answers.forEach((answer: Answer) => {
+            answer.Content = changeMathJaxDes(answer.Content);
+          });
+        });
+      }
+      nextTick(() => {
+        if (question.value && question.value.Type == "QUIZ2") {
+          setDefaultProperty();
+        }
+      });
+    });
     onMounted(() => {
       // Set the question ref to a deep copy of props.questionPart
       question.value = JSON.parse(JSON.stringify(props.questionPart));
@@ -296,7 +298,6 @@ export default defineComponent({
           });
         });
       }
-      defaultQuestion.value = question.value;
     });
     onMounted(() => {
       nextTick(() => {
@@ -335,6 +336,7 @@ export default defineComponent({
       updateDuplicateQuestionModalStatus,
       resetData,
       updateQuestion,
+      closeEditModal,
     };
   },
 });

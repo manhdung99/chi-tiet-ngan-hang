@@ -6,7 +6,7 @@ export default interface Question {
   Media: Media | null;
   CloneAnswers: string;
   Type: string;
-  Answers: Array<Answer> | null;
+  Answers: Array<Answer>;
   LevelPart: number;
   TypePart: number;
 }
