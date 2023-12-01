@@ -10,7 +10,7 @@
 
       <div class="swal2-actions">
         <button
-          @click="moveToListBank()"
+          @click="reloadPage()"
           type="button"
           class="swal2-confirm swal2-styled hover:bg-blue-700"
           aria-label=""
@@ -32,6 +32,7 @@ import closeIcon from "../../assets/image/close-icon.svg";
 import { usePopupStore } from "../../stores/popup";
 import successIcon from "../../assets/image/success-icon.svg";
 import { useQuestionBankStore } from "../../stores/question-bank-store";
+import { storeToRefs } from "pinia";
 export default defineComponent({
   name: "AddNewSuccess",
   props: {
@@ -43,15 +44,21 @@ export default defineComponent({
   setup(props) {
     const { updateAddNewSuccessStatus } = usePopupStore();
     const { deleteBank, duplicateBank } = useQuestionBankStore();
-    const moveToListBank = () => {
+    const { bankID } = storeToRefs(useQuestionBankStore());
+    const reloadPage = () => {
       updateAddNewSuccessStatus(false);
+      const url =
+        window.location.origin +
+        "/eduso/teacher/ExamManage/StorageQuestion/" +
+        bankID.value;
+      window.location.replace(url);
     };
     return {
       closeIcon,
       successIcon,
       duplicateBank,
       deleteBank,
-      moveToListBank,
+      reloadPage,
     };
   },
 });
