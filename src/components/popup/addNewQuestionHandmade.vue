@@ -21,7 +21,10 @@
             class="input w-full"
             v-model="tagName"
           />
-          <div v-if="isValidation && title == ''" class="text-red-500 text-sm">
+          <div
+            v-if="isValidation && tagName == ''"
+            class="text-red-500 text-sm"
+          >
             Chưa có nội dung dán nhãn
           </div>
         </div>
@@ -87,6 +90,7 @@
               :question="question"
               :updateQuestionContent="updateQuestionContent"
               :updateQuestionAnswer="updateQuestionAnswer"
+              :isValidation="isValidation"
             />
           </div>
         </div>
@@ -157,6 +161,7 @@ export default defineComponent({
           CloneAnswers: "",
           LevelPart: 1,
           TypePart: 1,
+          Error: "",
         },
       ];
     };
@@ -221,14 +226,15 @@ export default defineComponent({
       if (type.value == "QUIZ1" || type.value == "QUIZ4") {
         if (questionArray.value.length > 0) {
           questionArray.value.forEach((question: Question) => {
+            question.Error = "";
             if (question.Answers && question.Answers.length == 0) {
-              alert("Cần ít nhất 1 câu trả lời");
+              question.Error = "Cần ít nhất 1 câu trả lời";
               validateData = false;
             } else {
               let trueAnswerTime = 0;
               question.Answers?.forEach((answer) => {
                 if (answer.Content == "") {
-                  alert("Câu trả lời không được để trống");
+                  question.Error = "Câu trả lời không được để trống";
                   validateData = false;
                 } else if (answer.IsCorrect) {
                   if (type.value == "QUIZ4") {
@@ -237,14 +243,18 @@ export default defineComponent({
                     validateData = true;
                     trueAnswerTime = trueAnswerTime + 1;
                     if (trueAnswerTime > 1) {
-                      alert("QUIZ 1 chỉ có 1 đáp án đúng cho 1 câu hỏi");
+                      question.Error =
+                        "QUIZ 1 chỉ có 1 đáp án đúng cho 1 câu hỏi";
                       validateData = false;
                     }
                   }
                 }
               });
               if (trueAnswerTime == 0) {
-                alert("Chưa có câu trả lời đúng");
+                question.Error =
+                  question.Error == ""
+                    ? "Chưa có câu trả lời đúng"
+                    : question.Error;
                 validateData = false;
               }
             }

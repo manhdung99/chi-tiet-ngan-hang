@@ -1,73 +1,97 @@
-/**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
- * For licensing, see LICENSE.md.
- */
-
 import { Plugin } from "@ckeditor/ckeditor5-core";
-
-export default class AbbreviationEditing extends Plugin {
+import FillQuizCommand from "./fillquizcommand";
+export default class FillQuizEditing extends Plugin {
   init() {
     this._defineSchema();
     this._defineConverters();
+    this.editor.commands.add("addFillquiz", new FillQuizCommand(this.editor));
   }
+
   _defineSchema() {
     const schema = this.editor.model.schema;
 
-    // Extend the text node's schema to accept the abbreviation attribute.
     schema.extend("$text", {
       allowAttributes: ["abbreviation", "fillquiz"],
     });
+    schema.register("fillquiz", {
+      allowIn: ["$root", "$block"],
+      allowContentOf: "$block",
+      allowAttributes: ["contenteditable", "readonly", "title"],
+    });
+    schema.register("input", {
+      allowIn: "fillquiz",
+      isObject: true,
+      allowAttributes: [
+        "value",
+        "ans",
+        "placeholder",
+        "dps",
+        "contenteditable",
+        "class",
+        "size",
+      ], // Allow the 'value' attribute
+    });
   }
+
   _defineConverters() {
     const conversion = this.editor.conversion;
-    conversion.attributeToElement({
-      model: "fillquiz",
+    conversion.for("upcast").elementToElement({
       view: "fillquiz",
-    });
-    // Conversion from a model attribute to a view element
-    conversion.for("downcast").attributeToElement({
-      model: "abbreviation",
-
-      // Callback function provides access to the model attribute value
-      // and the DowncastWriter
-      view: (modelAttributeValue, conversionApi) => {
-        const { writer } = conversionApi;
-        console.log(modelAttributeValue);
-        const fillquizEle = writer.createAttributeElement("fillquiz", {
-          dps: modelAttributeValue && modelAttributeValue.userShow,
-          ans: modelAttributeValue && modelAttributeValue.answerShow,
-          placeholder: modelAttributeValue && modelAttributeValue.answerShow,
-          class: "fillquiz",
-          contenteditable: "false",
-          size: modelAttributeValue && modelAttributeValue.answerShow.length,
+      model: (viewElement, { writer }) => {
+        return writer.createElement("fillquiz", {
+          title: viewElement.getAttribute("title"),
         });
-        return fillquizEle;
       },
     });
 
-    // Conversion from a view element to a model attribute
-    conversion.for("upcast").elementToAttribute({
-      view: {
-        name: "fillquiz",
-        attributes: [
-          "title",
-          "ans",
-          "dps",
-          "placeholder",
-          "contenteditable",
-          "size",
-        ],
+    conversion.for("downcast").elementToElement({
+      model: "fillquiz",
+      view: (modelElement, { writer }) => {
+        const titleValue = modelElement.getAttribute("title") || "";
+        const fillquizView = writer.createContainerElement("fillquiz", {
+          title: titleValue,
+          contenteditable: "false",
+          readonly: "1",
+        });
+
+        return fillquizView;
       },
+    });
 
-      model: {
-        key: "abbreviation",
+    conversion.for("upcast").elementToElement({
+      view: "input",
+      model: (viewElement, { writer }) => {
+        return writer.createElement("input", {
+          value: viewElement.getAttribute("value"),
+          ans: viewElement.getAttribute("ans"),
+          placeholder: viewElement.getAttribute("placeholder"),
+          dps: viewElement.getAttribute("dps"),
+          contenteditable: "false",
+          readonly: "1",
+          class: "fillquiz",
+        });
+      },
+    });
 
-        // Callback function provides access to the view element
-        value: (viewElement) => {
-          const userShow = viewElement.getAttribute("dps");
-          const answerShow = viewElement.getAttribute("placeholder");
-          return { userShow, answerShow };
-        },
+    conversion.for("downcast").elementToElement({
+      model: "input",
+      view: (modelElement, { writer }) => {
+        const inputValue = modelElement.getAttribute("value") || "";
+        const ansValue = modelElement.getAttribute("ans") || "";
+        const placeholderValue = modelElement.getAttribute("placeholder") || "";
+        const dspValue = modelElement.getAttribute("dps") || "";
+        const inputView = writer.createEmptyElement("input", {
+          type: "text",
+          value: inputValue,
+          ans: ansValue,
+          placeholder: placeholderValue,
+          dps: dspValue,
+          contenteditable: "false",
+          readonly: "1",
+          class: "fillquiz",
+        });
+
+        return inputView;
       },
     });
   }

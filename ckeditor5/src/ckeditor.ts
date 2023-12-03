@@ -27,7 +27,7 @@ import { Paragraph } from "@ckeditor/ckeditor5-paragraph";
 import { PasteFromOffice } from "@ckeditor/ckeditor5-paste-from-office";
 import { Table, TableToolbar } from "@ckeditor/ckeditor5-table";
 import { TextTransformation } from "@ckeditor/ckeditor5-typing";
-import Abbreviation from "./fillquiz/fillquiz.js";
+import FillQuiz from "./fillquiz/fillquiz.js";
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
 // See https://ckeditor.com/docs/ckeditor5/latest/installation/plugins/installing-plugins.html for details.
 
@@ -56,7 +56,7 @@ class Editor extends InlineEditor {
     Table,
     TableToolbar,
     TextTransformation,
-    Abbreviation,
+    FillQuiz,
   ];
 
   public static override defaultConfig = {
@@ -79,7 +79,7 @@ class Editor extends InlineEditor {
         "mediaEmbed",
         "undo",
         "redo",
-        "abbreviation",
+        "fillquiz",
       ],
     },
     language: "en",

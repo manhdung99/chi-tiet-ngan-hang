@@ -1,8 +1,8 @@
 export default class FormView extends View<HTMLElement> {
     constructor(locale: any);
-    userShow: LabeledFieldView<import("@ckeditor/ckeditor5-ui").InputTextView>;
-    answerShow: LabeledFieldView<import("@ckeditor/ckeditor5-ui").InputTextView>;
-    descriptionShow: LabeledFieldView<import("@ckeditor/ckeditor5-ui").InputTextView>;
+    showInputView: LabeledFieldView<import("@ckeditor/ckeditor5-ui").InputTextView>;
+    ansInputView: LabeledFieldView<import("@ckeditor/ckeditor5-ui").InputTextView>;
+    noteInputView: LabeledFieldView<import("@ckeditor/ckeditor5-ui").InputTextView>;
     saveButtonView: ButtonView;
     cancelButtonView: ButtonView;
     childViews: import("@ckeditor/ckeditor5-ui").ViewCollection<LabeledFieldView<import("@ckeditor/ckeditor5-ui").InputTextView> | ButtonView>;

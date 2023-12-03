@@ -1,4 +1,4 @@
-export default class AbbreviationUI extends Plugin {
+export default class FillQuizUI extends Plugin {
     static get requires(): (typeof ContextualBalloon)[];
     init(): void;
     _balloon: ContextualBalloon | undefined;

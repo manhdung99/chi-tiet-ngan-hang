@@ -102,3 +102,13 @@ export async function validateQuestion(partQuestions: PartQuestion[]) {
   }
   return partQuestions;
 }
+
+export function convertStringNullToNull(obj: any): void {
+  for (const key in obj) {
+    if (obj[key] === "null") {
+      obj[key] = null;
+    } else if (typeof obj[key] === "object" && obj[key] !== null) {
+      convertStringNullToNull(obj[key]);
+    }
+  }
+}

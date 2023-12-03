@@ -14,6 +14,7 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
     questionDuplicateID: "",
     questionDuplicateIndex: 0,
     subjectID: "",
+    bankID: "",
     listBankQuestion: [] as Array<Bank>,
     currentbankName: "",
     arrayAddnew: [] as Array<PartQuestion>,
@@ -38,7 +39,10 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
         params.append("SearchText", searchText);
       }
       const response = await axios.post(url, params, {
-        withCredentials: true,
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
+        },
       });
       if (response) {
         this.listBankQuestion = response.data.Data;
@@ -69,7 +73,10 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
         const params = new FormData();
         params.append("ID", id);
         const response = await axios.post(url, params, {
-          withCredentials: true,
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
+          },
         });
         if (response) {
           this.currentBankQuestions = response.data.Data;
@@ -129,6 +136,8 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       arrayUpdate: Array<PartQuestion>,
       arrayDelete: Array<string>
     ) {
+      const popup = usePopupStore();
+      popup.isLoading = true;
       const url =
         process.env.VUE_APP_BASE_URL + process.env.VUE_APP_SAVE_BANK_DATA;
       const formData = new FormData();
@@ -147,14 +156,21 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       });
 
       const response = await axios.post(url, formData, {
-        withCredentials: true,
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
+        },
       });
-      if (response.data.Data) {
+      if (response.data.Code == 200) {
         this.arrayAddnew = [];
         this.arrayUpdate = [];
         this.arrayAddnew = [];
-        console.log(response);
+        popup.openAddnewSuccess = true;
+        this.bankID = response.data.Data.storeID;
+      } else {
+        alert("Có lỗi xảy ra trong quá trình lưu ngân hàng");
       }
+      popup.isLoading = false;
     },
     async removeBankByID(id: string) {
       const url =
@@ -162,7 +178,10 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       const formData = new FormData();
       formData.append("IDs", id);
       const response = await axios.post(url, formData, {
-        withCredentials: true,
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
+        },
       });
       if (response) {
         console.log(response);

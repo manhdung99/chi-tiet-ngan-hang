@@ -18,9 +18,9 @@ import { Paragraph } from "@ckeditor/ckeditor5-paragraph";
 import { PasteFromOffice } from "@ckeditor/ckeditor5-paste-from-office";
 import { Table, TableToolbar } from "@ckeditor/ckeditor5-table";
 import { TextTransformation } from "@ckeditor/ckeditor5-typing";
-import Abbreviation from "./fillquiz/fillquiz.js";
+import FillQuiz from "./fillquiz/fillquiz.js";
 declare class Editor extends InlineEditor {
-    static builtinPlugins: (typeof Abbreviation | typeof Autoformat | typeof BlockQuote | typeof Bold | typeof CloudServices | typeof Essentials | typeof Heading | typeof Image | typeof ImageCaption | typeof ImageStyle | typeof ImageToolbar | typeof ImageUpload | typeof ImageResizeEditing | typeof ImageResizeHandles | typeof Indent | typeof Italic | typeof Link | typeof List | typeof MediaEmbed | typeof Paragraph | typeof PasteFromOffice | typeof Table | typeof TableToolbar | typeof TextTransformation)[];
+    static builtinPlugins: (typeof FillQuiz | typeof Autoformat | typeof BlockQuote | typeof Bold | typeof CloudServices | typeof Essentials | typeof Heading | typeof Image | typeof ImageCaption | typeof ImageStyle | typeof ImageToolbar | typeof ImageUpload | typeof ImageResizeEditing | typeof ImageResizeHandles | typeof Indent | typeof Italic | typeof Link | typeof List | typeof MediaEmbed | typeof Paragraph | typeof PasteFromOffice | typeof Table | typeof TableToolbar | typeof TextTransformation)[];
     static defaultConfig: {
         toolbar: {
             items: string[];

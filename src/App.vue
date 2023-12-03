@@ -1,10 +1,20 @@
 <template>
   <div class="question-bank-detail">
     <div class="save-button">
-      <button @click="addBank" class="button button-primary">Lưu</button>
+      <button
+        :disabled="
+          arrayDelete.length == 0 &&
+          arrayAddnew.length == 0 &&
+          arrayUpdate.length == 0
+        "
+        @click="addBank"
+        class="button button-primary"
+      >
+        Lưu
+      </button>
     </div>
     <!-- Header page  -->
-    <!-- <div class="page-header bg-white px-6 py-5">
+    <div class="page-header bg-white px-6 py-5">
       <span class="breadcrumb">Home/ Khảo thí / Tiếng Anh</span>
       <div class="flex justify-between items-center">
         <div class="font-semibold text-xl flex items-center">
@@ -18,8 +28,8 @@
         </div>
       </div>
     </div>
-    <div class="page-body relative p-6 pb-0"> -->
-    <div class="page-body relative pb-0">
+    <div class="page-body relative p-6 pb-0">
+      <!-- <div class="page-body relative pb-0"> -->
       <div class="flex justify-between">
         <!-- Question  -->
         <div class="flex-1 mr-9">
@@ -56,7 +66,7 @@
           </div>
           <div
             class="text-red-500"
-            v-if="currentBankQuestions.length == 0 && !isLoading"
+            v-if="currentBankQuestionFilter.length == 0 && !isLoading"
           >
             Không có dữ liệu
           </div>
@@ -85,6 +95,7 @@
             Thêm câu hỏi
           </button>
           <button
+            v-if="showRemoveButton"
             @click="openRemoveModal = true"
             class="button bg-white text-red-500 border border-gray-300 hover:border-red-500 mt-4"
           >
@@ -229,7 +240,7 @@
             Bạn có chắc chắn muốn xoá ngân hàng
             <span class="text-red font-bold"> {{ currentbankName }} </span>?
           </h2>
-          <div class="flex justify-end">
+          <div @click="removeBank()" class="flex justify-end">
             <button
               class="bg-red-500 text-white py-2 px-4 rounded mr-4 hover:opacity-90"
             >
@@ -319,6 +330,7 @@ export default defineComponent({
       arrayDelete,
       arrayUpdate,
       subjectID,
+      bankID,
     } = storeToRefs(useQuestionBankStore());
     const currentBankQuestionFilter = ref<PartQuestion[]>([]);
     const answerListQuiz2 = ref<Answer[]>([]);
@@ -332,8 +344,8 @@ export default defineComponent({
     const showOnlyTheory = ref(false);
     const showOnlyEssay = ref(false);
     const filterArray = ref();
+    const showRemoveButton = ref(false);
     const filterKey = ref("");
-    const bankID = ref("");
     const openRemoveModal = ref(false);
     const currentbankName = ref("");
     const createListAnswerQuiz2 = () => {
@@ -367,7 +379,6 @@ export default defineComponent({
         arrayUpdate.value,
         arrayDelete.value
       );
-      updateAddNewSuccessStatus(true);
     };
     // Remove bank and back to list
     const removeBank = async () => {
@@ -443,7 +454,10 @@ export default defineComponent({
 
       if (lastParam.includes("create")) {
         updateSubjectID(lastParam.split("_")[1]);
+        showRemoveButton.value = false;
       } else {
+        updateSubjectID(localStorage.getItem("subjectID") as string);
+        showRemoveButton.value = true;
         bankID.value = lastParam;
       }
       await getCurrentBankQuestions(bankID.value);
@@ -685,6 +699,7 @@ export default defineComponent({
       openImportFromFile,
       subjectID,
       openAddnewSuccess,
+      showRemoveButton,
       validateQuestion,
       handlePageSizeChange,
       updateAddNewBankModalStatus,

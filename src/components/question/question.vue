@@ -42,17 +42,10 @@
     </div>
     <!-- Default  -->
     <div
-      v-show="!showDetail && !showAll"
+      v-if="!showDetail && !showAll"
       class="p-4 text-sm text-gray-600 flex justify-between"
     >
-      <span
-        class="max-w-4/5"
-        v-if="
-          question.Title != 'null' &&
-          question.Description != 'null' &&
-          (question.Title != null || question.Description != null)
-        "
-      >
+      <span class="max-w-4/5" v-if="question.Title || question.Description">
         <span v-if="question.Title" v-html="question.Title"></span>
         <span class="ellipsis" v-else v-html="question.Description"></span>
       </span>
@@ -103,29 +96,28 @@
       <div v-if="question.Media != null">
         <audio :src="question.Media.Path" :controls="true"></audio>
       </div>
-      <div v-html="question.Description"></div>
+      <div ref="quiz2Description" v-html="question.Description"></div>
       <div
         v-for="questionDetail in question.Questions"
         :key="questionDetail.ID"
       >
-        <div class="my-2 font-bold" v-html="questionDetail.Content"></div>
-        <div class="flex flex-col">
-          <span
-            v-for="(answer, index) in questionDetail.Answers"
-            :key="answer.ID"
-            class="mb-2.5 flex"
-          >
+        <div v-if="question.Type != 'QUIZ2'">
+          <div class="my-2 font-bold" v-html="questionDetail.Content"></div>
+          <div class="flex flex-col">
             <span
-              v-if="question.Type != 'QUIZ2'"
-              :class="answer.IsCorrect ? 'text-green font-bold' : ''"
-              >{{ index + 1 }}.</span
+              v-for="(answer, index) in questionDetail.Answers"
+              :key="answer.ID"
+              class="mb-2.5 flex"
             >
-            <span
-              :class="answer.IsCorrect ? 'text-green font-bold' : ''"
-              v-if="question.Type != 'QUIZ2'"
-              v-html="answer.Content"
-            ></span>
-          </span>
+              <span :class="answer.IsCorrect ? 'text-green font-bold' : ''"
+                >{{ index + 1 }}.</span
+              >
+              <span
+                :class="answer.IsCorrect ? 'text-green font-bold' : ''"
+                v-html="answer.Content"
+              ></span>
+            </span>
+          </div>
         </div>
       </div>
       <!-- Bottom  -->
@@ -166,6 +158,7 @@
     <editQuestionHandmade
       :questionPart="questionPart"
       :closeEditModal="closeEditModal"
+      :quiz2Description="quiz2Description"
     />
   </Teleport>
 </template>
@@ -184,6 +177,7 @@ import { addStaticLink } from "../../uses/addStaticLink";
 import { changeMathJaxDes } from "../../uses/convertData";
 import editQuestionHandmade from "../popup/editQuestionHandmade.vue";
 import Answer from "../../type/answer";
+import { convertStringNullToNull } from "../../uses/function";
 
 export default defineComponent({
   name: "QuestionVue",
@@ -226,6 +220,7 @@ export default defineComponent({
     // Remove the initialization of question with props.questionPart
     const question = ref<PartQuestion>();
     const defaultQuestion = ref<PartQuestion>();
+    const quiz2Description = ref(null);
     const {
       questionDeleteID,
       questionDeleteIndex,
@@ -286,6 +281,7 @@ export default defineComponent({
     onMounted(() => {
       // Set the question ref to a deep copy of props.questionPart
       question.value = JSON.parse(JSON.stringify(props.questionPart));
+      convertStringNullToNull(question.value);
       if (question.value) {
         question.value.Description = addStaticLink(question.value.Description);
         question.value.Description = changeMathJaxDes(
@@ -308,10 +304,14 @@ export default defineComponent({
     });
     const setDefaultProperty = () => {
       const elements = document.getElementsByClassName("fillquiz");
+      let htmlDescription = "";
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i] as HTMLInputElement;
-        const answers = props.answerListQuiz2 as Answer[];
-        element.placeholder = answers[i]?.Content;
+        if (!element.placeholder) {
+          const answers = props.answerListQuiz2 as Answer[];
+          element.placeholder = answers[i]?.Content;
+          htmlDescription = htmlDescription + element;
+        }
       }
     };
     const showDetail = ref(false);
@@ -329,6 +329,7 @@ export default defineComponent({
       questionDuplicateID,
       questionDuplicateIndex,
       question,
+      quiz2Description,
       updateAddNewBankModalStatus,
       updateDeleteQuestionModalStatus,
       deleteQuestion,

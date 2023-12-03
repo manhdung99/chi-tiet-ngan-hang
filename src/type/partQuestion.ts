@@ -13,4 +13,5 @@ export default interface PartQuestion {
   validateError?: boolean;
   TagsName?: String;
   ListTags?: Array<Tag>;
+  ExamQuestionArchiveID?: string;
 }

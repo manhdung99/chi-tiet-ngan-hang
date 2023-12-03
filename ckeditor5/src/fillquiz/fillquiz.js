@@ -4,11 +4,11 @@
  */
 
 import { Plugin } from "@ckeditor/ckeditor5-core";
-import AbbreviationEditing from "./fillquizediting";
-import AbbreviationUI from "./fillquizui";
+import FillQuizEditing from "./fillquizediting";
+import FillQuizUI from "./fillquizui";
 
-export default class Abbreviation extends Plugin {
+export default class FillQuiz extends Plugin {
   static get requires() {
-    return [AbbreviationEditing, AbbreviationUI];
+    return [FillQuizEditing, FillQuizUI];
   }
 }

@@ -9,4 +9,5 @@ export default interface Question {
   Answers: Array<Answer>;
   LevelPart: number;
   TypePart: number;
+  Error?: string;
 }

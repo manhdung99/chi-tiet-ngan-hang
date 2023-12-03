@@ -19,6 +19,12 @@
             class="input w-full"
             v-model="question.TagsName"
           />
+          <div
+            v-if="isValidation && question.TagsName == ''"
+            class="text-red-500 text-sm"
+          >
+            Chưa có nội dung dán nhãn
+          </div>
         </div>
         <div class="my-4">
           <div class="text-indigo font-semibold mb-2">Dạng câu hỏi</div>
@@ -72,12 +78,6 @@
                 class="input w-full placeholder-gray-400"
                 placeholder="Tiêu đề"
               />
-              <div
-                v-if="isValidation && title == ''"
-                class="text-red-500 text-sm"
-              >
-                Chưa có tiêu đề
-              </div>
             </div>
           </div>
         </div>
@@ -86,15 +86,11 @@
         <div class="relative">
           <div class="text-indigo font-semibold mb-2">Nội dung câu hỏi</div>
           <CKEditorCustom
-            :model-value="question.Description ? question.Description : ''"
+            :model-value="
+              quiz2Description?.innerHTML ? quiz2Description?.innerHTML : ''
+            "
             @update:model-value="(newValue:any) => (question.Description = newValue)"
           />
-          <div
-            v-if="isValidation && editorData == ''"
-            class="text-red-500 text-sm"
-          >
-            Chưa có nội dung
-          </div>
           <div v-if="questionArray.length > 0" class="mt-4">
             <MultipleChoice
               v-for="(questionDetal, index) in questionArray"
@@ -104,10 +100,11 @@
               :question="questionDetal"
               :updateQuestionContent="updateQuestionContent"
               :updateQuestionAnswer="updateQuestionAnswer"
+              :isValidation="isValidation"
             />
           </div>
         </div>
-        <div v-if="type != 'QUIZ2'" class="flex my-4">
+        <div v-if="question.Type != 'QUIZ2'" class="flex my-4">
           <button @click="addNewQuestion" class="mr-2 button small-button">
             Thêm câu hỏi
           </button>
@@ -137,6 +134,7 @@ import CKEditorCustom from "../custom/CKEditorCustom.vue";
 import PartQuestion from "@/type/partQuestion";
 import { addStaticLink } from "../../uses/addStaticLink";
 import { changeMathJaxDes } from "../../uses/convertData";
+import { convertStringNullToNull } from "../../uses/function";
 import Media from "@/type/media";
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 export default defineComponent({
@@ -154,6 +152,10 @@ export default defineComponent({
       type: Function,
       required: true,
     },
+    quiz2Description: {
+      type: Element,
+      required: true,
+    },
   },
   setup(props) {
     const { updateAddNewQuestionHandmadeModalStatus } = usePopupStore();
@@ -161,7 +163,6 @@ export default defineComponent({
       storeToRefs(useQuestionBankStore());
     const { updateQuestionInQuestionList } = useQuestionBankStore();
     const editorData = ref("");
-    const type = ref("QUIZ1");
     const level = ref("1");
     const title = ref("");
     const isValidation = ref(false);
@@ -181,6 +182,7 @@ export default defineComponent({
           CloneAnswers: "",
           LevelPart: 1,
           TypePart: 1,
+          Error: "",
         },
       ];
     };
@@ -189,7 +191,9 @@ export default defineComponent({
         (question) => question.ID != id
       );
     };
-
+    onMounted(() => {
+      console.log(props.quiz2Description?.innerHTML);
+    });
     const editorOptions = {
       // Quill options here
       modules: {
@@ -200,31 +204,34 @@ export default defineComponent({
       },
     };
     const updateQuestionToList = () => {
-      const data = {
-        ...question,
-        Type: type.value,
-        ID: question.value?.ID as string,
-        Description: question.value?.Description as string,
-        Media: question.value?.Media as Media | null,
-        Title: question.value?.Title as string,
-        Questions: questionArray.value,
-        LevelPart: question.value?.LevelPart as number,
-        TypePart: question.value?.TypePart as number,
-        TagsName: question.value?.TagsName,
-      };
-      updateQuestionInQuestionList(data);
-      const questionInAddlist = arrayAddnew.value.find(
-        (currentQuestion) => currentQuestion.ID == data.ID
-      );
-      if (questionInAddlist) {
-        const partIndex = arrayAddnew.value.findIndex(
-          (data) => data.ID == questionInAddlist.ID
+      if (validateQuestion()) {
+        const data = {
+          ...question,
+          Type: question.value?.Type as string,
+          ID: question.value?.ID as string,
+          Description: question.value?.Description as string,
+          Media: question.value?.Media as Media | null,
+          Title: question.value?.Title as string,
+          Questions: questionArray.value,
+          LevelPart: question.value?.LevelPart as number,
+          TypePart: question.value?.TypePart as number,
+          TagsName: question.value?.TagsName,
+          ExamQuestionArchiveID: "",
+        };
+        updateQuestionInQuestionList(data);
+        const questionInAddlist = arrayAddnew.value.find(
+          (currentQuestion) => currentQuestion.ID == data.ID
         );
-        arrayAddnew.value[partIndex] = questionInAddlist;
-      } else {
-        arrayUpdate.value = [...arrayUpdate.value, data];
+        if (questionInAddlist) {
+          const partIndex = arrayAddnew.value.findIndex(
+            (data) => data.ID == questionInAddlist.ID
+          );
+          arrayAddnew.value[partIndex] = questionInAddlist;
+        } else {
+          arrayUpdate.value = [...arrayUpdate.value, data];
+        }
+        props.closeEditModal();
       }
-      props.closeEditModal();
     };
     const updateQuestionContent = (id: string, content: string) => {
       const question = questionArray.value.find(
@@ -245,56 +252,59 @@ export default defineComponent({
     const updateEditorData = (data: any) => {
       editorData.value = data;
     };
-    // const validateQuestion = () => {
-    //   let validateData = true;
-    //   isValidation.value = true;
-    //   if (title.value == "") {
-    //     return false;
-    //   }
-    //   if (editorData.value == "") {
-    //     return false;
-    //   }
-    //   if (type.value == "QUIZ1" || type.value == "QUIZ4") {
-    //     if (questionArray.value.length > 0) {
-    //       questionArray.value.forEach((question: Question) => {
-    //         if (question.Answers && question.Answers.length == 0) {
-    //           alert("Cần ít nhất 1 câu trả lời");
-    //           validateData = false;
-    //         } else {
-    //           let trueAnswerTime = 0;
-    //           question.Answers?.forEach((answer) => {
-    //             if (answer.Content == "") {
-    //               alert("Câu trả lời không được để trống");
-    //               validateData = false;
-    //             } else if (answer.IsCorrect) {
-    //               if (type.value == "QUIZ4") {
-    //                 validateData = true;
-    //               } else {
-    //                 validateData = true;
-    //                 trueAnswerTime = trueAnswerTime + 1;
-    //                 if (trueAnswerTime > 1) {
-    //                   alert("QUIZ 1 chỉ có 1 đáp án đúng cho 1 câu hỏi");
-    //                   validateData = false;
-    //                 }
-    //               }
-    //             }
-    //           });
-    //           if (trueAnswerTime == 0) {
-    //             alert("Chưa có câu trả lời đúng");
-    //             validateData = false;
-    //           }
-    //         }
-    //       });
-    //     } else {
-    //       alert("Cần ít nhất 1 câu hỏi");
-    //       validateData = false;
-    //     }
-    //   }
-    //   return validateData;
-    // };
+    const validateQuestion = () => {
+      let validateData = true;
+      isValidation.value = true;
+      if (question.value?.TagsName == "") {
+        return false;
+      }
+      if (question.value?.Type == "QUIZ1" || question.value?.Type == "QUIZ4") {
+        if (questionArray.value.length > 0) {
+          questionArray.value.forEach((questionDetail: Question) => {
+            questionDetail.Error = "";
+            if (questionDetail.Answers && questionDetail.Answers.length == 0) {
+              questionDetail.Error = "Cần ít nhất 1 câu trả lời";
+              validateData = false;
+            } else {
+              let trueAnswerTime = 0;
+              questionDetail.Answers?.forEach((answer) => {
+                if (answer.Content == "") {
+                  questionDetail.Error = "Câu trả lời không được để trống";
+                  validateData = false;
+                } else if (answer.IsCorrect) {
+                  if (questionDetail.Type == "QUIZ4") {
+                    validateData = true;
+                  } else {
+                    validateData = true;
+                    trueAnswerTime = trueAnswerTime + 1;
+                    if (trueAnswerTime > 1) {
+                      questionDetail.Error =
+                        "QUIZ 1 chỉ có 1 đáp án đúng cho 1 câu hỏi";
+                      validateData = false;
+                    }
+                  }
+                }
+              });
+              if (trueAnswerTime == 0) {
+                questionDetail.Error =
+                  questionDetail.Error == ""
+                    ? "Chưa có câu trả lời đúng"
+                    : questionDetail.Error;
+                validateData = false;
+              }
+            }
+          });
+        } else {
+          alert("Cần ít nhất 1 câu hỏi");
+          validateData = false;
+        }
+      }
+      return validateData;
+    };
     onMounted(() => {
       // Set the question ref to a deep copy of props.questionPart
       question.value = JSON.parse(JSON.stringify(props.questionPart));
+      convertStringNullToNull(question.value);
       if (question.value) {
         question.value.Description = addStaticLink(question.value.Description);
         question.value.Description = changeMathJaxDes(
@@ -316,7 +326,6 @@ export default defineComponent({
       editorData,
       editorOptions,
       questionArray,
-      type,
       title,
       level,
       questionType,

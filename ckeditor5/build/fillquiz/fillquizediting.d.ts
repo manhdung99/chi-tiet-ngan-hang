@@ -1,4 +1,4 @@
-export default class AbbreviationEditing extends Plugin {
+export default class FillQuizEditing extends Plugin {
     init(): void;
     _defineSchema(): void;
     _defineConverters(): void;

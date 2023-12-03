@@ -16,12 +16,12 @@ export default class FormView extends View {
   constructor(locale) {
     super(locale);
 
-    this.userShow = this._createInput("Hiển thị của học viên");
-    this.answerShow = this._createInput("Đáp án (phân cách bởi dấu |)");
-    this.descriptionShow = this._createInput("Giải thích đáp án");
+    this.showInputView = this._createInput("Hiển thị của học viên");
+    this.ansInputView = this._createInput("Đáp án (phân cách bởi dấu | )");
+    this.noteInputView = this._createInput("Giải thích đáp án");
 
     this.saveButtonView = this._createButton(
-      "Save",
+      "Đồng ý",
       icons.check,
       "ck-button-save"
     );
@@ -30,7 +30,7 @@ export default class FormView extends View {
     this.saveButtonView.type = "submit";
 
     this.cancelButtonView = this._createButton(
-      "Cancel",
+      "Bỏ qua",
       icons.cancel,
       "ck-button-cancel"
     );
@@ -39,9 +39,9 @@ export default class FormView extends View {
     this.cancelButtonView.delegate("execute").to(this, "cancel");
 
     this.childViews = this.createCollection([
-      this.userShow,
-      this.answerShow,
-      this.descriptionShow,
+      this.showInputView,
+      this.ansInputView,
+      this.noteInputView,
       this.saveButtonView,
       this.cancelButtonView,
     ]);

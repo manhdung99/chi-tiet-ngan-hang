@@ -1,7 +1,14 @@
 <template>
   <div
+    v-if="isValidation && question.Error != ''"
+    class="text-red-500 text-sm text-center mb-1"
+  >
+    {{ question.Error }}
+  </div>
+  <div
     v-if="questionDetail"
     class="border border-dashed border-gray-300 relative p-2.5 pt-5 mutiple-choice mb-5"
+    :class="isValidation && question.Error != '' ? 'border-red-500' : ''"
   >
     <div>
       <span
@@ -108,6 +115,10 @@ export default defineComponent({
     },
     updateQuestionAnswer: {
       type: Function,
+      required: true,
+    },
+    isValidation: {
+      type: Boolean,
       required: true,
     },
   },
