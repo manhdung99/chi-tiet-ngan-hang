@@ -15,6 +15,19 @@
               class="text-sm font-semibold cursor-pointer hover:underline"
               >Đã chọn {{ currentQuestionPartSelected.length }} câu</span
             >
+            <div
+              v-if="currentListPartQuestion.length > 0"
+              class="absolute flex ml-1/4"
+            >
+              <span
+                ><input
+                  :checked="checkAll"
+                  class="cursor-pointer"
+                  @click="checkAllQuestion()"
+                  type="checkbox"
+              /></span>
+              <span class="ml-4">Chọn tất cả</span>
+            </div>
           </div>
           <span
             @click="updateSelectQuestionFromBankStatus(false)"
@@ -174,7 +187,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import inboxIcon from "../../assets/image/noun-inbox.svg";
 import closeIcon from "../../assets/image/close-icon.svg";
 import { usePopupStore } from "@/stores/popup";
@@ -204,6 +217,8 @@ export default defineComponent({
     const { arrayAddnew } = storeToRefs(useQuestionBankStore());
     const answerListQuiz2 = ref<Answer[]>([]);
     const openListSelected = ref(false);
+    const checkAll = ref(false);
+    const currentSelectedPartQuestionsID = ref<Array<string>>([]);
     const toggleTag = (obj: Bank) => {
       const id = obj.ID;
       if (obj.Tags == null) {
@@ -214,6 +229,34 @@ export default defineComponent({
       );
       if (currentElement) {
         currentElement.classList.toggle("hidden");
+      }
+    };
+    const checkAllQuestion = () => {
+      checkAll.value = !checkAll.value;
+      if (checkAll.value) {
+        if (currentQuestionPartSelected.value.length == 0) {
+          currentQuestionPartSelected.value = [
+            ...currentListPartQuestion.value,
+          ];
+        } else {
+          currentListPartQuestion.value.forEach((part) => {
+            if (!currentSelectedPartQuestionsID.value.includes(part.ID)) {
+              currentQuestionPartSelected.value = [
+                ...currentQuestionPartSelected.value,
+                part,
+              ];
+            }
+          });
+        }
+      } else {
+        currentListPartQuestion.value.forEach((part) => {
+          if (currentSelectedPartQuestionsID.value.includes(part.ID)) {
+            currentQuestionPartSelected.value =
+              currentQuestionPartSelected.value.filter(
+                (selectedPart) => part.ID != selectedPart.ID
+              );
+          }
+        });
       }
     };
     const saveData = () => {
@@ -228,6 +271,7 @@ export default defineComponent({
     const currentListPartQuestion = ref<Array<PartQuestion>>([]);
     const currentQuestionPartSelected = ref<Array<PartQuestion>>([]);
     const getListPartByTag = async (bank: Bank, tag: any) => {
+      checkAll.value = false;
       isLoading.value = true;
       currentListPartQuestion.value = await getListPart(bank, tag);
       currentListPartQuestion.value.forEach((part) => {
@@ -239,7 +283,7 @@ export default defineComponent({
       createListAnswerQuiz2();
       isLoading.value = false;
     };
-    const currentSelectedPartQuestionsID = ref<Array<string>>([]);
+
     const updateListSelectedQuestion = (partQuestions: PartQuestion) => {
       if (currentQuestionPartSelected.value.length > 0) {
         if (currentSelectedPartQuestionsID.value.includes(partQuestions.ID)) {
@@ -259,10 +303,6 @@ export default defineComponent({
           ...currentQuestionPartSelected.value,
         ];
       }
-      currentSelectedPartQuestionsID.value =
-        currentQuestionPartSelected.value.map(
-          (question) => question.ID as string
-        );
     };
     const removeQuestionInListSelected = (id: string) => {
       currentQuestionPartSelected.value =
@@ -290,6 +330,12 @@ export default defineComponent({
     onMounted(() => {
       getBanks();
     });
+    watch(currentQuestionPartSelected, () => {
+      currentSelectedPartQuestionsID.value =
+        currentQuestionPartSelected.value.map(
+          (question) => question.ID as string
+        );
+    });
     return {
       isLoading,
       closeIcon,
@@ -300,6 +346,7 @@ export default defineComponent({
       currentSelectedPartQuestionsID,
       answerListQuiz2,
       openListSelected,
+      checkAll,
       updateSelectQuestionFromBankStatus,
       getTagQuiz,
       toggleTag,
@@ -308,6 +355,7 @@ export default defineComponent({
       saveData,
       removeQuestionInListSelected,
       validatelistSelectedQuestion,
+      checkAllQuestion,
     };
   },
 });
@@ -321,11 +369,10 @@ export default defineComponent({
   overflow-y: auto;
 }
 .scroll::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.5);
+  background: #000;
 }
 .scroll::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 2px;
 }
 .scroll::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.1);

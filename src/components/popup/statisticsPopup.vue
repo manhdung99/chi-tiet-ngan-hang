@@ -14,7 +14,7 @@
         <table class="classify-table">
           <thead>
             <tr>
-              <th><div>Tổng câu</div></th>
+              <th><div>Tổng số câu</div></th>
               <th><div>Số câu bài tập</div></th>
               <th><div>Số câu lý thuyết</div></th>
             </tr>
@@ -38,7 +38,7 @@
               <th><div>Nhận biết</div></th>
               <th><div>Thông hiểu</div></th>
               <th><div>Vận dụng</div></th>
-              <th><div>Vạn dụng cao</div></th>
+              <th><div>Vận dụng cao</div></th>
             </tr>
           </thead>
           <tbody>
@@ -63,10 +63,10 @@
         <table class="level-table">
           <thead>
             <tr>
-              <th><div>Chọn 1 đáp án</div></th>
-              <th><div>Nối từ</div></th>
+              <th><div>Chọn 1 đáp án đúng</div></th>
               <th><div>Điền từ</div></th>
-              <th><div>Chọn nhiều đáp án</div></th>
+              <th><div>Nối từ</div></th>
+              <th><div>Chọn nhiều đáp án đúng</div></th>
               <th><div>Tự luận</div></th>
             </tr>
           </thead>

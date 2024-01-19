@@ -91,7 +91,10 @@
             "
             @update:model-value="(newValue:any) => (question.Description = newValue)"
           />
-          <div v-if="questionArray.length > 0" class="mt-4">
+          <div
+            v-if="questionArray.length > 0 && question.Type != 'QUIZ2'"
+            class="mt-4"
+          >
             <MultipleChoice
               v-for="(questionDetal, index) in questionArray"
               :key="questionDetal.ID"
@@ -223,10 +226,12 @@ export default defineComponent({
           (currentQuestion) => currentQuestion.ID == data.ID
         );
         if (questionInAddlist) {
+          console.log(1111111111);
+
           const partIndex = arrayAddnew.value.findIndex(
             (data) => data.ID == questionInAddlist.ID
           );
-          arrayAddnew.value[partIndex] = questionInAddlist;
+          arrayAddnew.value[partIndex] = data;
         } else {
           arrayUpdate.value = [...arrayUpdate.value, data];
         }
@@ -272,11 +277,14 @@ export default defineComponent({
                   questionDetail.Error = "Câu trả lời không được để trống";
                   validateData = false;
                 } else if (answer.IsCorrect) {
-                  if (questionDetail.Type == "QUIZ4") {
+                  if (question.value?.Type == "QUIZ4") {
                     validateData = true;
+                    trueAnswerTime = trueAnswerTime + 1;
                   } else {
                     validateData = true;
                     trueAnswerTime = trueAnswerTime + 1;
+                    console.log(trueAnswerTime);
+
                     if (trueAnswerTime > 1) {
                       questionDetail.Error =
                         "QUIZ 1 chỉ có 1 đáp án đúng cho 1 câu hỏi";

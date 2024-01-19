@@ -11,6 +11,10 @@
     border-bottom: none;
 }
 
+.ant-select-dropdown {
+    min-width: 100px !important;
+}
+
 :where(.css-dev-only-do-not-override-185kyl0).ant-select-dropdown {
     min-width: 100px !important;
 }

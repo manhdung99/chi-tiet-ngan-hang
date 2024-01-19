@@ -15,7 +15,8 @@
       class="p-3 flex items-center justify-between border-b border-grey-lighter"
     >
       <span class="text-sm font-semibold"
-        >{{ index + 1 }}. Câu hỏi số {{ index + 1 }}</span
+        >Câu hỏi số {{ question.dataIndex + 1 }}
+        <span v-if="question.TagsName"> : {{ question.TagsName }}</span></span
       >
       <span class="text-sm text-black-lighter"
         >{{ question.TypePart == 1 ? "Lý thuyết" : "Bài tập" }} |
@@ -24,7 +25,11 @@
             ? "Nhận biết"
             : question.LevelPart == 2
             ? "Thông hiểu"
-            : "Vận dụng"
+            : question.LevelPart == 3
+            ? "Vận dụng"
+            : question.LevelPart == 4
+            ? "Vận dụng cao"
+            : "Khác"
         }}
         |
         {{
@@ -53,12 +58,14 @@
       </span>
       <div class="flex">
         <span
+          title="Hiển thị chi tiết"
           @click="showDetail = true"
           class="mr-2 cursor-pointer flex items-end"
         >
           <img :src="eyeIcon" alt="" />
         </span>
         <span
+          title="Nhân bản câu "
           @click="
             questionDuplicateID = question.ID;
             questionDuplicateIndex = index as number;
@@ -69,6 +76,7 @@
           <img :src="duplicateIcon" alt="" />
         </span>
         <span
+          title="Xóa câu hỏi "
           @click="
             questionDeleteID = question.ID;
             questionDeleteIndex = index as number;
@@ -102,16 +110,16 @@
         :key="questionDetail.ID"
       >
         <div v-if="question.Type != 'QUIZ2'">
-          <div class="my-2 font-bold" v-html="questionDetail.Content"></div>
+          <div
+            class="my-2 font-bold flex"
+            v-html="questionDetail.Content"
+          ></div>
           <div class="flex flex-col">
             <span
-              v-for="(answer, index) in questionDetail.Answers"
+              v-for="answer in questionDetail.Answers"
               :key="answer.ID"
               class="mb-2.5 flex"
             >
-              <span :class="answer.IsCorrect ? 'text-green font-bold' : ''"
-                >{{ index + 1 }}.</span
-              >
               <span
                 :class="answer.IsCorrect ? 'text-green font-bold' : ''"
                 v-html="answer.Content"
@@ -124,6 +132,7 @@
       <div class="flex justify-end mt-2">
         <div class="flex">
           <span
+            title="Chỉnh sửa câu hỏi "
             v-if="canEdit"
             @click="isEdit = true"
             class="mr-2 cursor-pointer"
@@ -131,6 +140,7 @@
             <img :src="editIcon" alt="" />
           </span>
           <span
+            title="Nhân bản câu hỏi "
             @click="
               questionDuplicateID = question.ID;
               questionDuplicateIndex = index as number;
@@ -141,6 +151,7 @@
             <img :src="duplicateIcon" alt="" />
           </span>
           <span
+            title="Xóa câu hỏi "
             @click="
               questionDeleteID = question.ID;
               questionDeleteIndex = index as number;

@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-modal modal-center z-10">
+  <div class="custom-modal modal-center z-20">
     <div class="bg-white rounded-md select-question-from-bank relative p-4">
       <div>
         <div class="flex justify-center">

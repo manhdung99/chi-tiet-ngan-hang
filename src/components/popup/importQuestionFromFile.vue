@@ -24,12 +24,12 @@
           ><span><img class="w-6- h-6 mr-2" :src="uploadIcon" alt="" /></span>
           Chọn file Word</label
         >
-        <label
+        <a
+          href="/eduso/teacher/LessonPartExam/ExportTemplate"
           class="button text-white bg-gray-400 hover:bg-gray-500 flex mr-2"
-          for="import-input"
           ><span
             ><img class="w-6- h-6" :src="downloadDocumentIcon" alt="" /></span
-          >Tải file mẫu</label
+          >Tải file mẫu</a
         >
       </div>
       <div class="swal2-actions">
@@ -61,10 +61,23 @@
     >
       <div class="select-bank-modal-content-part2">
         <div
-          class="flex items-center justify-between text-indigo text-lg border-b p-4"
+          class="flex items-center justify-between text-indigo text-lg border-b p-4 relative"
         >
           <div class="flex w-full justify-between mr-6 items-center">
-            <span>Câu hỏi đã chọn </span>
+            <span class="flex"
+              >Câu hỏi đã chọn
+              <span v-if="currentListPartQuestion.length > 0" class="flex ml-8">
+                <span
+                  ><input
+                    :checked="checkAll"
+                    class="cursor-pointer"
+                    @click="checkAllQuestion()"
+                    type="checkbox"
+                /></span>
+                <span class="ml-4">Chọn tất cả</span>
+              </span>
+            </span>
+
             <div class="flex items-center">
               <button
                 @click="validatelistSelectedQuestion"
@@ -166,7 +179,9 @@ export default defineComponent({
     const { addQuestionToCurrentList } = useQuestionBankStore();
     const { arrayAddnew } = storeToRefs(useQuestionBankStore());
     const answerListQuiz2 = ref<Answer[]>([]);
+    const checkAll = ref(false);
     const fileImported = ref(false);
+    const currentSelectedPartQuestionsID = ref<Array<string>>([]);
     const saveData = () => {
       addQuestionToCurrentList(currentQuestionPartSelected.value);
       arrayAddnew.value = [
@@ -178,7 +193,6 @@ export default defineComponent({
     };
     const currentListPartQuestion = ref<Array<PartQuestion>>([]);
     const currentQuestionPartSelected = ref<Array<PartQuestion>>([]);
-    const currentSelectedPartQuestionsID = ref<Array<string>>([]);
     const updateListSelectedQuestion = (partQuestions: PartQuestion) => {
       if (currentQuestionPartSelected.value.length > 0) {
         if (currentSelectedPartQuestionsID.value.includes(partQuestions.ID)) {
@@ -198,10 +212,6 @@ export default defineComponent({
           ...currentQuestionPartSelected.value,
         ];
       }
-      currentSelectedPartQuestionsID.value =
-        currentQuestionPartSelected.value.map(
-          (question) => question.ID as string
-        );
     };
     const removeQuestionInListSelected = (id: string) => {
       currentQuestionPartSelected.value =
@@ -239,10 +249,7 @@ export default defineComponent({
           process.env.VUE_APP_BASE_URL + process.env.VUE_APP_IMPORT_FILE,
           formData,
           {
-            headers: {
-              Authorization:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
-            },
+            withCredentials: true,
           }
         )
         .then((response) => {
@@ -260,6 +267,40 @@ export default defineComponent({
         });
       updateLoading(false);
     };
+    const checkAllQuestion = () => {
+      checkAll.value = !checkAll.value;
+      if (checkAll.value) {
+        if (currentQuestionPartSelected.value.length == 0) {
+          currentQuestionPartSelected.value = [
+            ...currentListPartQuestion.value,
+          ];
+        } else {
+          currentListPartQuestion.value.forEach((part) => {
+            if (!currentSelectedPartQuestionsID.value.includes(part.ID)) {
+              currentQuestionPartSelected.value = [
+                ...currentQuestionPartSelected.value,
+                part,
+              ];
+            }
+          });
+        }
+      } else {
+        currentListPartQuestion.value.forEach((part) => {
+          if (currentSelectedPartQuestionsID.value.includes(part.ID)) {
+            currentQuestionPartSelected.value =
+              currentQuestionPartSelected.value.filter(
+                (selectedPart) => part.ID != selectedPart.ID
+              );
+          }
+        });
+      }
+    };
+    watch(currentQuestionPartSelected, () => {
+      currentSelectedPartQuestionsID.value =
+        currentQuestionPartSelected.value.map(
+          (question) => question.ID as string
+        );
+    });
     return {
       closeIcon,
       inboxIcon,
@@ -271,12 +312,14 @@ export default defineComponent({
       uploadIcon,
       downloadDocumentIcon,
       isLoading,
+      checkAll,
       updateListSelectedQuestion,
       saveData,
       removeQuestionInListSelected,
       validatelistSelectedQuestion,
       handleFileChange,
       updateOpenImportFromFileModalStatus,
+      checkAllQuestion,
     };
   },
 });

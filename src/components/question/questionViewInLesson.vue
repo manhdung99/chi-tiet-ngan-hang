@@ -7,30 +7,34 @@
     >
     </span>
     <input
-      v-if="!isFillDesOnetime"
+      :disabled="isFillDesOnetime"
       v-model="partQuestionDetail.TagsName"
-      class="input mr-2 w-1/4"
+      class="input mr-2 w-1/4 h-10"
       type="text"
       placeholder="Nội dung"
+      @change="updateQuestionInSelected"
     />
     <select
       v-model="partQuestionDetail.TypePart"
-      class="input mr-2"
+      class="input mr-2 h-10"
       name=""
       id=""
+      @change="updateQuestionInSelected"
     >
       <option :value="1">Lý thuyết</option>
       <option :value="2">Bài tập</option>
     </select>
     <select
       v-model="partQuestionDetail.LevelPart"
-      class="input mr-4"
+      class="input mr-4 h-10"
       name=""
       id=""
+      @change="updateQuestionInSelected"
     >
       <option :value="1">Nhận biết</option>
       <option :value="2">Thông hiểu</option>
       <option :value="3">Vận dụng</option>
+      <option :value="4">Vận dụng cao</option>
     </select>
     <input
       @click="updateListSelectedQuestion"
@@ -71,7 +75,7 @@ export default defineComponent({
       Media: null,
       Title: "",
       Type: "",
-      TypePart: 1,
+      TypePart: 2,
       LevelPart: 1,
       Questions: [],
       TagsName: "",
@@ -81,7 +85,7 @@ export default defineComponent({
     const isEdit = ref(false);
     const currentSelectedQuestionsID = ref<Array<string>>([]);
     const updateListSelectedQuestion = () => {
-      if (isFillDesOnetime) {
+      if (isFillDesOnetime.value) {
         partQuestionDetail.value.TagsName = tagsNameOneTime.value;
       }
       if (
@@ -110,6 +114,20 @@ export default defineComponent({
         (question) => question.ID
       );
     };
+    const updateQuestionInSelected = () => {
+      if (
+        currentSelectedQuestionsID.value.includes(partQuestionDetail.value.ID)
+      ) {
+        const index = currentSelectedQuestion.value.findIndex((question) => {
+          return question.ID == partQuestionDetail.value.ID;
+        });
+        let newArray = [...currentSelectedQuestion.value];
+        if (index >= 0) {
+          newArray[index] = partQuestionDetail.value;
+          currentSelectedQuestion.value = [...newArray];
+        }
+      }
+    };
     watch([tagsNameOneTime, isFillDesOnetime], () => {
       if (isFillDesOnetime) {
         partQuestionDetail.value.TagsName = tagsNameOneTime.value;
@@ -118,7 +136,7 @@ export default defineComponent({
     onMounted(() => {
       partQuestionDetail.value = {
         ...props.question,
-        TypePart: 1,
+        TypePart: 2,
         LevelPart: 1,
       };
       currentSelectedQuestionsID.value = currentSelectedQuestion.value.map(
@@ -140,6 +158,7 @@ export default defineComponent({
       currentSelectedQuestionsID,
       updateAddNewBankModalStatus,
       updateListSelectedQuestion,
+      updateQuestionInSelected,
     };
   },
 });

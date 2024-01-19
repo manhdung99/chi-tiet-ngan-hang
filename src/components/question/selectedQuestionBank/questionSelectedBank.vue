@@ -5,7 +5,10 @@
       class="p-3 flex items-center justify-between border-b border-grey-lighter"
     >
       <span class="text-sm font-semibold"
-        >{{ index + 1 }}. Câu hỏi số {{ index + 1 }}</span
+        ><span>
+          Câu hỏi số {{ index + 1 }}
+          <span v-if="question.TagsName"> : {{ question.TagsName }}</span>
+        </span></span
       >
       <span class="text-sm text-black-lighter"
         >{{ question.TypePart == 1 ? "Lý thuyết" : "Bài tập" }} |
@@ -14,7 +17,11 @@
             ? "Nhận biết"
             : question.LevelPart == 2
             ? "Thông hiểu"
-            : "Vận dụng"
+            : question.LevelPart == 3
+            ? "Vận dụng"
+            : question.LevelPart == 4
+            ? "Vận dụng cao"
+            : "Khác"
         }}
         |
         {{
@@ -41,6 +48,7 @@
       </span>
       <div class="flex">
         <span
+          title="Xem chi tiết "
           @click="showDetail = true"
           class="mr-2 cursor-pointer flex items-end"
         >
@@ -59,7 +67,7 @@
         v-for="questionDetail in question.Questions"
         :key="questionDetail.ID"
       >
-        <div class="my-2 font-bold" v-html="questionDetail.Content"></div>
+        <div class="my-2 font-bold flex" v-html="questionDetail.Content"></div>
         <div class="flex flex-col">
           <span
             v-for="(answer, index) in questionDetail.Answers"

@@ -39,10 +39,7 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
         params.append("SearchText", searchText);
       }
       const response = await axios.post(url, params, {
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
-        },
+        withCredentials: true,
       });
       if (response) {
         this.listBankQuestion = response.data.Data;
@@ -72,17 +69,18 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
           process.env.VUE_APP_GET_LIST_PART_EXAMMANAGER;
         const params = new FormData();
         params.append("ID", id);
+        params.append("PageSize", "1000");
         const response = await axios.post(url, params, {
-          headers: {
-            Authorization:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
-          },
+          withCredentials: true,
         });
         if (response) {
           this.currentBankQuestions = response.data.Data;
           this.currentBankQuestions = this.currentBankQuestions.map((part) => {
             let tagName = "";
-            part.ListTags?.forEach((data) => {
+            part.ListTags?.forEach((data, index) => {
+              if (index > 0) {
+                tagName = tagName + "-";
+              }
               tagName = tagName + data.name;
             });
             return { ...part, TagsName: tagName };
@@ -156,10 +154,7 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       });
 
       const response = await axios.post(url, formData, {
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
-        },
+        withCredentials: true,
       });
       if (response.data.Code == 200) {
         this.arrayAddnew = [];
@@ -178,10 +173,7 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       const formData = new FormData();
       formData.append("IDs", id);
       const response = await axios.post(url, formData, {
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNjk2MjE1MTg3LCJleHAiOjE3Mjc4Mzc1ODcsImlhdCI6MTY5NjIxNTE4N30.3REB3CPSjv-di39fmnkombmugCN5IFtzoS6kdG9Cjik",
-        },
+        withCredentials: true,
       });
       if (response) {
         console.log(response);

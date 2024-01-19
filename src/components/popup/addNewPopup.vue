@@ -27,7 +27,7 @@
           class="card-add-new"
         >
           <div class="font-semibold">Chọn từ ngân hàng khác</div>
-          <div class="text-sm">Chọn từ thư viện sách của Eduso</div>
+          <div class="text-sm">Chọn từ ngân hàng của Eduso</div>
         </div>
         <div
           @click="
@@ -37,7 +37,7 @@
           class="card-add-new"
         >
           <div class="font-semibold">Tạo từ file Word</div>
-          <div class="text-sm">Chọn từ thư viện sách của Eduso</div>
+          <div class="text-sm">Import từ file word</div>
         </div>
         <div
           @click="
@@ -47,7 +47,7 @@
           class="card-add-new"
         >
           <div class="font-semibold">Tạo thủ công</div>
-          <div class="text-sm">Chọn từ thư viện sách của Eduso</div>
+          <div class="text-sm">Tạo câu hỏi thủ công</div>
         </div>
       </div>
     </div>

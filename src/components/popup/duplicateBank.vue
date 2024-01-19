@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-modal modal-center z-10">
+  <div class="custom-modal modal-center z-20">
     <div
       class="w-80 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-lg z-10"
     >

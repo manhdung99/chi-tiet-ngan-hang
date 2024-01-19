@@ -3,6 +3,7 @@
     <div
       @click="toggleLesson(lesson)"
       class="text-red-500 text-sm flex font-medium py-2 items-center cursor-pointer"
+      v-if="lesson.Title"
     >
       {{ lesson.Title }}
       <span class="ml-1 cursor-pointer" :id="`icon-lesson-${lesson.ID}`"
@@ -18,6 +19,12 @@
         :key="question.ID"
         :question="question"
       />
+    </div>
+    <div
+      class="text-red-500 text-sm flex font-medium py-2"
+      v-if="!lesson.Title"
+    >
+      Không có dữ liệu
     </div>
   </div>
 </template>
@@ -43,11 +50,19 @@ export default defineComponent({
   },
   setup() {
     const showListQuestion = ref(false);
-    const { listLessonParts } = storeToRefs(useSelectQuestionStore());
+    const { listLessonParts, isFillDesOnetime, tagsNameOneTime } = storeToRefs(
+      useSelectQuestionStore()
+    );
     const { loadPartQuestions } = useSelectQuestionStore();
     const toggleLesson = async (obj: Lesson) => {
       if (obj.partQuestion == null) {
         obj.partQuestion = await loadPartQuestions(obj.ID);
+        obj.partQuestion = obj.partQuestion.map((part) => {
+          if (isFillDesOnetime) {
+            return { ...part, TagsName: tagsNameOneTime.value };
+          }
+          return { ...part };
+        });
       }
       const currentElement = document.getElementById(`lesson-${obj.ID}`);
       const iconElement = document.getElementById(`icon-lesson-${obj.ID}`);

@@ -25,7 +25,7 @@ export default class FillQuizEditing extends Plugin {
         "value",
         "ans",
         "placeholder",
-        "dps",
+        "dsp",
         "contenteditable",
         "class",
         "size",
@@ -65,7 +65,7 @@ export default class FillQuizEditing extends Plugin {
           value: viewElement.getAttribute("value"),
           ans: viewElement.getAttribute("ans"),
           placeholder: viewElement.getAttribute("placeholder"),
-          dps: viewElement.getAttribute("dps"),
+          dsp: viewElement.getAttribute("dsp"),
           contenteditable: "false",
           readonly: "1",
           class: "fillquiz",
@@ -79,13 +79,13 @@ export default class FillQuizEditing extends Plugin {
         const inputValue = modelElement.getAttribute("value") || "";
         const ansValue = modelElement.getAttribute("ans") || "";
         const placeholderValue = modelElement.getAttribute("placeholder") || "";
-        const dspValue = modelElement.getAttribute("dps") || "";
+        const dspValue = modelElement.getAttribute("dsp") || "";
         const inputView = writer.createEmptyElement("input", {
           type: "text",
           value: inputValue,
           ans: ansValue,
           placeholder: placeholderValue,
-          dps: dspValue,
+          dsp: dspValue,
           contenteditable: "false",
           readonly: "1",
           class: "fillquiz",

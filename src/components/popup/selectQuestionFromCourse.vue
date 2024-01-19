@@ -48,7 +48,7 @@
             <div class="text-sm font-bold mb-1">Nhập nội dung</div>
             <input
               :disabled="!isFillDesOnetime"
-              class="input w-1/2"
+              class="input w-1/2 h-10"
               type="text"
               placeholder="Nội dung "
               v-model="tagsNameOneTime"
@@ -138,7 +138,7 @@
               </div>
             </div>
             <!-- Part 2  -->
-            <div v-show="showSelectedSentence">
+            <div v-if="showSelectedSentence">
               <div class="list-question mt-4">
                 <selectedQuestion
                   v-for="(question, index) in currentSelectedQuestion"
@@ -226,6 +226,7 @@ export default defineComponent({
     const cancelAction = () => {
       currentSelectedQuestion.value = [];
       updateSelectQuestionFromCourseStatus(false);
+      tagsNameOneTime.value = "";
     };
     const saveData = () => {
       addQuestionToCurrentList(currentSelectedQuestion.value);
@@ -235,6 +236,7 @@ export default defineComponent({
       ];
       currentSelectedQuestion.value = [];
       updateSelectQuestionFromCourseStatus(false);
+      tagsNameOneTime.value = "";
     };
     const filterChapters = (courseID: string, ParentID: string) => {
       if (courseID != undefined) {
@@ -267,6 +269,7 @@ export default defineComponent({
     watch(selectedOption, () => {
       if (selectedOption.value == "eachsentence") {
         isFillDesOnetime.value = false;
+        tagsNameOneTime.value = "";
       } else {
         isFillDesOnetime.value = true;
       }

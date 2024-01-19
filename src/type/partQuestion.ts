@@ -14,4 +14,5 @@ export default interface PartQuestion {
   TagsName?: String;
   ListTags?: Array<Tag>;
   ExamQuestionArchiveID?: string;
+  dataIndex?: number;
 }
