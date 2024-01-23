@@ -1,6 +1,6 @@
 <template>
   <div class="custom-modal modal-center">
-    <div class="add-new-handmade scroll-area">
+    <div class="add-new-handmade">
       <div class="border-b px-4 py-4 flex justify-between">
         <span class="text-indigo font-bold">Thêm câu hỏi</span>
         <span
@@ -9,7 +9,7 @@
           ><img :src="closeIcon" alt=""
         /></span>
       </div>
-      <div class="px-4 border-b">
+      <div class="px-4 border-b scroll handmade-description">
         <div class="my-4">
           <label class="text-indigo font-semibold mb-2" for="tag-input"
             >Nội dung dán nhãn</label
@@ -319,5 +319,7 @@ export default defineComponent({
 .add-new-handmade .small-button {
   height: 32px;
 }
+.handmade-description {
+  max-height: calc(100vh - 136px);
+}
 </style>
-../../cke

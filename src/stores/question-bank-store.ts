@@ -39,7 +39,9 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
         params.append("SearchText", searchText);
       }
       const response = await axios.post(url, params, {
-        withCredentials: true,
+        headers: {
+          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
+        },
       });
       if (response) {
         this.listBankQuestion = response.data.Data;
@@ -71,7 +73,9 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
         params.append("ID", id);
         params.append("PageSize", "1000");
         const response = await axios.post(url, params, {
-          withCredentials: true,
+          headers: {
+            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
+          },
         });
         if (response) {
           this.currentBankQuestions = response.data.Data;
@@ -154,7 +158,9 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       });
 
       const response = await axios.post(url, formData, {
-        withCredentials: true,
+        headers: {
+          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
+        },
       });
       if (response.data.Code == 200) {
         this.arrayAddnew = [];
@@ -173,7 +179,9 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       const formData = new FormData();
       formData.append("IDs", id);
       const response = await axios.post(url, formData, {
-        withCredentials: true,
+        headers: {
+          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
+        },
       });
       if (response) {
         console.log(response);

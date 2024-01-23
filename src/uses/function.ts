@@ -68,7 +68,7 @@ export async function validateQuestion(partQuestions: PartQuestion[]) {
                 } else {
                   part = { ...part, validateError: false };
                   trueAnswerTime = trueAnswerTime + 1;
-                  if (trueAnswerTime > 1) {
+                  if (trueAnswerTime != 1) {
                     part = { ...part, validateError: true };
                   }
                 }

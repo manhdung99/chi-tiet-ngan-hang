@@ -93,44 +93,87 @@
       v-show="showDetail || showAll"
       class="p-4 pt-8 text-gray-600 text-sm relative"
     >
-      <span class="absolute right-2 cursor-pointer top-1"
-        ><img @click="showDetail = false" class="w-8 h-8" :src="iconTop" alt=""
-      /></span>
-      <span
-        class="font-bold text-base"
-        v-if="question.Title != null && question.Title != 'null'"
-        v-html="question.Title"
-      ></span>
-      <div v-if="question.Media != null">
-        <audio :src="question.Media.Path" :controls="true"></audio>
-      </div>
-      <div ref="quiz2Description" v-html="question.Description"></div>
-      <div
-        v-for="questionDetail in question.Questions"
-        :key="questionDetail.ID"
-      >
-        <div v-if="question.Type != 'QUIZ2'">
-          <div
-            class="my-2 font-bold flex"
-            v-html="questionDetail.Content"
-          ></div>
-          <div class="flex flex-col">
-            <span
-              v-for="answer in questionDetail.Answers"
-              :key="answer.ID"
-              class="mb-2.5 flex"
-            >
+      <div class="pr-32">
+        <span
+          class="font-bold text-base"
+          v-if="question.Title != null && !question.Title.includes('null')"
+          v-html="question.Title"
+        ></span>
+        <div v-if="question.Media != null && question.Media != 'null'">
+          <audio :src="question.Media.Path" :controls="true"></audio>
+        </div>
+        <div
+          v-if="
+            question.Description != null &&
+            !question.Description.includes('null')
+          "
+          ref="quiz2Description"
+          v-html="question.Description"
+        ></div>
+        <div
+          v-for="questionDetail in question.Questions"
+          :key="questionDetail.ID"
+        >
+          <div v-if="question.Type != 'QUIZ2'">
+            <div
+              class="my-2 font-bold flex"
+              v-html="questionDetail.Content"
+            ></div>
+            <div class="flex flex-col">
               <span
+                v-for="(answer, index) in questionDetail.Answers"
+                :key="answer.ID"
+                class="mb-2.5 flex"
                 :class="answer.IsCorrect ? 'text-green font-bold' : ''"
-                v-html="answer.Content"
-              ></span>
-            </span>
+              >
+                <span
+                  v-if="
+                    !answer.Content.includes('A') &&
+                    !answer.Content.includes('B') &&
+                    !answer.Content.includes('C') &&
+                    !answer.Content.includes('D')
+                  "
+                >
+                  {{
+                    index == 0
+                      ? "A"
+                      : index == 1
+                      ? "B"
+                      : index == 2
+                      ? "C"
+                      : index == 3
+                      ? "D"
+                      : "E"
+                  }}
+                </span>
+                <span
+                  v-if="
+                    !answer.Content.includes('A') &&
+                    !answer.Content.includes('B') &&
+                    !answer.Content.includes('C') &&
+                    !answer.Content.includes('D')
+                  "
+                  class="mx-1"
+                >
+                  .
+                </span>
+                <span v-html="answer.Content"></span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
+
       <!-- Bottom  -->
-      <div class="flex justify-end mt-2">
+      <div class="flex justify-end mt-2 absolute top-2 right-1">
         <div class="flex">
+          <span
+            title="Thu gọn "
+            @click="showDetail = false"
+            class="icon-hide mr-2 cursor-pointer"
+          >
+            <EyeInvisibleOutlined />
+          </span>
           <span
             title="Chỉnh sửa câu hỏi "
             v-if="canEdit"
@@ -189,11 +232,12 @@ import { changeMathJaxDes } from "../../uses/convertData";
 import editQuestionHandmade from "../popup/editQuestionHandmade.vue";
 import Answer from "../../type/answer";
 import { convertStringNullToNull } from "../../uses/function";
-
+import { EyeInvisibleOutlined } from "@ant-design/icons-vue";
 export default defineComponent({
   name: "QuestionVue",
   components: {
     editQuestionHandmade,
+    EyeInvisibleOutlined,
   },
   props: {
     index: {
@@ -363,5 +407,14 @@ export default defineComponent({
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+}
+.icon-hide {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

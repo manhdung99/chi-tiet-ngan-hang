@@ -85,35 +85,80 @@
     </div>
     <!-- Detail  -->
     <div v-else class="p-4 pt-8 text-gray-600 text-sm relative">
-      <span class="absolute right-2 cursor-pointer top-1"
-        ><img @click="showDetail = false" class="w-8 h-8" :src="iconTop" alt=""
-      /></span>
-      <span class="font-bold text-base" v-html="question.Title"></span>
-      <div v-html="question.Description"></div>
-      <div
-        v-for="questionDetail in question.Questions"
-        :key="questionDetail.ID"
-      >
-        <div class="my-2 font-bold flex" v-html="questionDetail.Content"></div>
-        <div class="flex flex-col">
-          <span
-            v-for="(answer, index) in questionDetail.Answers"
-            :key="answer.ID"
-            class="mb-2.5"
-          >
-            <span :class="answer.IsCorrect ? 'text-green font-bold' : ''"
-              >{{ index + 1 }}.</span
-            >
+      <div class="pr-32">
+        <span
+          v-if="question.Title != null && !question.Title.includes('null')"
+          class="font-bold text-base"
+          v-html="question.Title"
+        ></span>
+        <div
+          v-if="
+            question.Description != null &&
+            !question.Description.includes('null')
+          "
+          v-html="question.Description"
+        ></div>
+        <div
+          v-for="questionDetail in question.Questions"
+          :key="questionDetail.ID"
+        >
+          <div
+            class="my-2 font-bold flex"
+            v-html="questionDetail.Content"
+          ></div>
+          <div class="flex flex-col">
             <span
+              v-for="(answer, index) in questionDetail.Answers"
+              :key="answer.ID"
+              class="mb-2.5"
               :class="answer.IsCorrect ? 'text-green font-bold' : ''"
-              v-html="answer.Content"
-            ></span>
-          </span>
+            >
+              <span
+                v-if="
+                  !answer.Content.includes('A') &&
+                  !answer.Content.includes('B') &&
+                  !answer.Content.includes('C') &&
+                  !answer.Content.includes('D')
+                "
+              >
+                {{
+                  index == 0
+                    ? "A"
+                    : index == 1
+                    ? "B"
+                    : index == 2
+                    ? "C"
+                    : index == 3
+                    ? "D"
+                    : "E"
+                }}
+              </span>
+              <span
+                v-if="
+                  !answer.Content.includes('A') &&
+                  !answer.Content.includes('B') &&
+                  !answer.Content.includes('C') &&
+                  !answer.Content.includes('D')
+                "
+                class="mx-1"
+              >
+                .
+              </span>
+              <span v-html="answer.Content"></span>
+            </span>
+          </div>
         </div>
       </div>
       <!-- Bottom  -->
-      <div class="flex justify-end mt-2">
+      <div class="flex justify-end mt-2 absolute top-6 right-1">
         <div class="flex">
+          <span
+            title="Thu gọn "
+            @click="showDetail = false"
+            class="icon-hide mr-2 cursor-pointer"
+          >
+            <EyeInvisibleOutlined />
+          </span>
           <span
             title="Nhân bản câu hỏi "
             @click="
@@ -142,7 +187,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import { usePopupStore } from "../../../stores/popup";
 import { useQuestionBankStore } from "../../../stores/question-bank-store";
 import editIcon from "../../../assets/image/edit.svg";
@@ -152,8 +197,13 @@ import removeIcon from "../../../assets/image/removeIcon.svg";
 import iconTop from "../../../assets/image/top-arrow.svg";
 import { storeToRefs } from "pinia";
 import PartQuestion from "../../../type/partQuestion";
+import { EyeInvisibleOutlined } from "@ant-design/icons-vue";
+import { useSelectQuestionStore } from "@/stores/question-select-flow-store";
 export default defineComponent({
   name: "QuestionSelectedVue",
+  components: {
+    EyeInvisibleOutlined,
+  },
   props: {
     index: {
       type: Number,
@@ -182,7 +232,9 @@ export default defineComponent({
       questionDeleteIndex,
     } = storeToRefs(useQuestionBankStore());
     const { updateQuestionInQuestionList } = useQuestionBankStore();
-
+    const { tagsNameOneTime, isFillDesOnetime } = storeToRefs(
+      useSelectQuestionStore()
+    );
     const resetData = () => {
       // Reset the question ref to a deep copy of props.questionPart
       question.value = JSON.parse(JSON.stringify(props.questionPart));
@@ -194,7 +246,13 @@ export default defineComponent({
     });
 
     const showDetail = ref(false);
-
+    watch([tagsNameOneTime, isFillDesOnetime], () => {
+      if (isFillDesOnetime) {
+        if (question.value) {
+          question.value.TagsName = tagsNameOneTime.value;
+        }
+      }
+    });
     return {
       editIcon,
       duplicateIcon,

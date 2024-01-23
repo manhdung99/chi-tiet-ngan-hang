@@ -5,7 +5,7 @@
 
 import { InlineEditor } from "@ckeditor/ckeditor5-editor-inline";
 import { Autoformat } from "@ckeditor/ckeditor5-autoformat";
-import { Bold, Italic } from "@ckeditor/ckeditor5-basic-styles";
+import { Bold, Italic, Underline } from "@ckeditor/ckeditor5-basic-styles";
 import { BlockQuote } from "@ckeditor/ckeditor5-block-quote";
 import { CloudServices } from "@ckeditor/ckeditor5-cloud-services";
 import { Essentials } from "@ckeditor/ckeditor5-essentials";
@@ -36,6 +36,7 @@ class Editor extends InlineEditor {
     Autoformat,
     BlockQuote,
     Bold,
+    Underline,
     CloudServices,
     Essentials,
     Heading,
@@ -66,6 +67,7 @@ class Editor extends InlineEditor {
         "|",
         "bold",
         "italic",
+        "underline",
         "link",
         "bulletedList",
         "numberedList",

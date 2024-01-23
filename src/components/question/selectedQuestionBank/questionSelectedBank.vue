@@ -61,8 +61,17 @@
       <span class="absolute right-2 cursor-pointer top-1"
         ><img @click="showDetail = false" class="w-8 h-8" :src="iconTop" alt=""
       /></span>
-      <span class="font-bold text-base" v-html="question.Title"></span>
-      <div v-html="question.Description"></div>
+      <span
+        v-if="question.Title != null && !question.Title.includes('null')"
+        class="font-bold text-base"
+        v-html="question.Title"
+      ></span>
+      <div
+        v-if="
+          question.Description != null && !question.Description.includes('null')
+        "
+        v-html="question.Description"
+      ></div>
       <div
         v-for="questionDetail in question.Questions"
         :key="questionDetail.ID"
@@ -73,15 +82,41 @@
             v-for="(answer, index) in questionDetail.Answers"
             :key="answer.ID"
             class="mb-2.5"
+            :class="answer.IsCorrect ? 'text-green font-bold' : ''"
           >
             <span
-              v-if="question.Type != 'QUIZ2'"
-              :class="answer.IsCorrect ? 'text-green font-bold' : ''"
-              >{{ index + 1 }}.</span
+              v-if="
+                !answer.Content.includes('A') &&
+                !answer.Content.includes('B') &&
+                !answer.Content.includes('C') &&
+                !answer.Content.includes('D')
+              "
             >
+              {{
+                index == 0
+                  ? "A"
+                  : index == 1
+                  ? "B"
+                  : index == 2
+                  ? "C"
+                  : index == 3
+                  ? "D"
+                  : "E"
+              }}
+            </span>
+            <span
+              v-if="
+                !answer.Content.includes('A') &&
+                !answer.Content.includes('B') &&
+                !answer.Content.includes('C') &&
+                !answer.Content.includes('D')
+              "
+              class="mx-1"
+            >
+              .
+            </span>
             <span
               v-if="question.Type != 'QUIZ2'"
-              :class="answer.IsCorrect ? 'text-green font-bold' : ''"
               v-html="answer.Content"
             ></span>
           </span>

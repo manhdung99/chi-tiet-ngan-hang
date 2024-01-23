@@ -5,7 +5,7 @@
       class="text-red-500 text-sm flex font-medium py-2 items-center cursor-pointer"
       v-if="lesson.Title"
     >
-      {{ lesson.Title }}
+      {{ lessonIndex + 1 }} . {{ lesson.Title }}
       <span class="ml-1 cursor-pointer" :id="`icon-lesson-${lesson.ID}`"
         ><img
           class="w-6 h-6"
@@ -45,6 +45,10 @@ export default defineComponent({
   props: {
     lesson: {
       type: Object,
+      required: true,
+    },
+    lessonIndex: {
+      type: Number,
       required: true,
     },
   },

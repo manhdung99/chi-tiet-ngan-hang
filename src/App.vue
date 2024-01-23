@@ -14,7 +14,7 @@
       </button>
     </div>
     <!-- Header page  -->
-    <!-- <div class="page-header bg-white px-6 py-5">
+    <div class="page-header bg-white px-6 py-5">
       <span class="breadcrumb">Home/ Khảo thí / Tiếng Anh</span>
       <div class="flex justify-between items-center">
         <div class="font-semibold text-xl flex items-center">
@@ -28,8 +28,8 @@
         </div>
       </div>
     </div>
-    <div class="page-body relative p-6 pb-0"> -->
-    <div class="page-body relative pb-0">
+    <div class="page-body relative p-6 pb-0">
+      <!-- <div class="page-body relative pb-0"> -->
       <div class="flex justify-between">
         <!-- Question  -->
         <div class="flex-1 mr-9">
@@ -435,18 +435,30 @@ export default defineComponent({
         data = currentBankQuestions.value;
       } else if (childKey == "") {
         filterKey.value = parentKey;
-        data = currentBankQuestions.value.filter(
-          (question: PartQuestion) =>
-            question.ListTags && question.ListTags[0].name.includes(parentKey)
-        );
+        data = currentBankQuestions.value.filter((question: PartQuestion) => {
+          if (question.TagsName && !question.ListTags) {
+            const tagArray = question.TagsName.split("-");
+            return tagArray.length > 0 && tagArray[0].includes(parentKey);
+          } else {
+            return (
+              question.ListTags && question.ListTags[0].name.includes(parentKey)
+            );
+          }
+        });
       } else {
         filterKey.value = parentKey + childKey;
-        data = currentBankQuestions.value.filter(
-          (question: PartQuestion) =>
+        data = currentBankQuestions.value.filter((question: PartQuestion) => {
+          if (question.TagsName && !question.ListTags) {
+            return (
+              question.TagsName.includes(parentKey) &&
+              question.TagsName.includes(childKey)
+            );
+          } else {
             question.ListTags &&
-            question.ListTags[0].name.includes(parentKey) &&
-            question.ListTags[1].name.includes(childKey)
-        );
+              question.ListTags[0].name.includes(parentKey) &&
+              question.ListTags[1].name.includes(childKey);
+          }
+        });
       }
       data = data.map((o, index) => {
         return { ...o, dataIndex: index };

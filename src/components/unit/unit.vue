@@ -16,9 +16,10 @@
     </p>
     <div class="hidden ml-9" :id="`unit-${unit.ID}`">
       <LessonVue
-        v-for="lesson in unit.Lessons"
+        v-for="(lesson, index) in unit.Lessons"
         :key="lesson.ID"
         :lesson="lesson"
+        :lessonIndex="index"
       />
     </div>
   </div>

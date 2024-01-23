@@ -3,7 +3,7 @@ import Media from "./media";
 export default interface Question {
   ID: string;
   Content: string;
-  Media: Media | null;
+  Media: Media | null | string;
   CloneAnswers: string;
   Type: string;
   Answers: Array<Answer>;

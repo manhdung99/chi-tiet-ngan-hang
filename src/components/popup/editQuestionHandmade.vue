@@ -1,13 +1,13 @@
 <template>
   <div v-if="question" class="custom-modal modal-center">
-    <div class="add-new-handmade scroll-area">
+    <div class="add-new-handmade scroll">
       <div class="border-b px-4 py-4 flex justify-between">
         <span class="text-indigo font-bold">Chỉnh sửa câu hỏi</span>
         <span @click="closeEditModal()" class="cursor-pointer"
           ><img :src="closeIcon" alt=""
         /></span>
       </div>
-      <div class="px-4 border-b">
+      <div class="px-4 border-b scroll handmade-description">
         <div class="my-4">
           <label class="text-indigo font-semibold mb-2" for="tag-input"
             >Nội dung dán nhãn</label
@@ -28,7 +28,13 @@
         </div>
         <div class="my-4">
           <div class="text-indigo font-semibold mb-2">Dạng câu hỏi</div>
-          <select v-model="question.Type" class="w-full input" name="" id="">
+          <select
+            @change="clearError"
+            v-model="question.Type"
+            class="w-full input"
+            name=""
+            id=""
+          >
             <option value="QUIZ1">QUIZ1 : Chọn 1 đáp án đúng</option>
             <option value="QUIZ2">QUIZ2 : Điền từ</option>
             <option value="QUIZ3">QUIZ3 : Matching</option>
@@ -125,7 +131,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import closeIcon from "../../assets/image/close-icon.svg";
 import { usePopupStore } from "../../stores/popup";
 import { useQuestionBankStore } from "../../stores/question-bank-store";
@@ -226,8 +232,6 @@ export default defineComponent({
           (currentQuestion) => currentQuestion.ID == data.ID
         );
         if (questionInAddlist) {
-          console.log(1111111111);
-
           const partIndex = arrayAddnew.value.findIndex(
             (data) => data.ID == questionInAddlist.ID
           );
@@ -309,6 +313,9 @@ export default defineComponent({
       }
       return validateData;
     };
+    const clearError = () => {
+      isValidation.value = false;
+    };
     onMounted(() => {
       // Set the question ref to a deep copy of props.questionPart
       question.value = JSON.parse(JSON.stringify(props.questionPart));
@@ -327,6 +334,7 @@ export default defineComponent({
       }
       questionArray.value = question.value?.Questions as Question[];
     });
+
     return {
       closeIcon,
       questionDeleteID,
@@ -347,6 +355,7 @@ export default defineComponent({
       updateQuestionContent,
       updateQuestionAnswer,
       updateEditorData,
+      clearError,
     };
   },
 });
