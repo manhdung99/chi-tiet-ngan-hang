@@ -14,7 +14,7 @@
       </button>
     </div>
     <!-- Header page  -->
-    <div class="page-header bg-white px-6 py-5">
+    <!-- <div class="page-header bg-white px-6 py-5">
       <span class="breadcrumb">Home/ Khảo thí / Tiếng Anh</span>
       <div class="flex justify-between items-center">
         <div class="font-semibold text-xl flex items-center">
@@ -28,8 +28,8 @@
         </div>
       </div>
     </div>
-    <div class="page-body relative p-6 pb-0">
-      <!-- <div class="page-body relative pb-0"> -->
+    <div class="page-body relative p-6 pb-0"> -->
+    <div class="page-body relative pb-0">
       <div class="flex justify-between">
         <!-- Question  -->
         <div class="flex-1 mr-9">

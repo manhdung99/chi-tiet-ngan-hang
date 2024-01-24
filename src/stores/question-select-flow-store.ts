@@ -31,9 +31,7 @@ export const useSelectQuestionStore = defineStore("selectQuestionStore", {
       popUp.isLoading = true;
       axios
         .post(_url, _form, {
-          headers: {
-            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
-          },
+          withCredentials: true,
         })
         .then((response) => {
           popUp.isLoading = false;
@@ -80,9 +78,7 @@ export const useSelectQuestionStore = defineStore("selectQuestionStore", {
       _form.append("ParentID", chapterID);
       await axios
         .post(_url, _form, {
-          headers: {
-            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
-          },
+          withCredentials: true,
         })
         .then((response) => {
           const stt = response.data.Status;
@@ -103,9 +99,7 @@ export const useSelectQuestionStore = defineStore("selectQuestionStore", {
         process.env.VUE_APP_BASE_URL + process.env.VUE_APP_GET_LIST_PART;
       _form.append("LessonID", lessonID);
       const response = await axios.post(_url, _form, {
-        headers: {
-          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
-        },
+        withCredentials: true,
       });
       if (response.data && response.data.Data) {
         let listData = response.data.Data;

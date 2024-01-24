@@ -25,9 +25,7 @@ export const useSelectQuestionFromBank = defineStore("selectQuestionFromBank", {
         params.append("MainSubjectID", subjectID);
       }
       const response = await axios.post(url, params, {
-        headers: {
-          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
-        },
+        withCredentials: true,
       });
       if (response.data.StatusCode == 1) {
         this.bankList = response.data.Data;
@@ -42,9 +40,7 @@ export const useSelectQuestionFromBank = defineStore("selectQuestionFromBank", {
       const params = new FormData();
       params.append("BankQuizID", bankID);
       const response = await axios.post(url, params, {
-        headers: {
-          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
-        },
+        withCredentials: true,
       });
       if (response) {
         obj.Tags = response.data.Data;
@@ -59,9 +55,7 @@ export const useSelectQuestionFromBank = defineStore("selectQuestionFromBank", {
       params.append("StoreID", bankID);
       params.append("TagID", tagID);
       const response = await axios.post(url, params, {
-        headers: {
-          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI1ZDgwOGUyZWNmOWE4MjFiZGM5ZGFmODEiLCJlbWFpbCI6InZpZXRwaHVuZy5pdEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IlBodW5nIER1YyBWaWV0Iiwicm9sZSI6InRlYWNoZXIiLCJUeXBlIjoidGVhY2hlciIsIkNoZWNrIjoiWmRQNEVqIiwibmJmIjoxNzA1NjU2MzU0LCJleHAiOjE3MzcyNzg3NTQsImlhdCI6MTcwNTY1NjM1NH0.m4eJjNsUUEJm9WNiEqicnjrrLW8a8h9qYyRX6At1FQs`,
-        },
+        withCredentials: true,
       });
       if (response) {
         return response.data.Data;
