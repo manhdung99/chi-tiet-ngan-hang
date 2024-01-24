@@ -126,7 +126,6 @@ import MultipleChoice from "../questionType/MultipleChoice.vue";
 import Question from "../../type/question";
 import Answer from "../../type/answer";
 import CKEditorCustom from "../custom/CKEditorCustom.vue";
-import { Alert } from "ant-design-vue";
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 export default defineComponent({
   name: "AddNewQuestionHandmade",
@@ -214,7 +213,7 @@ export default defineComponent({
         question.Answers = answers;
       }
     };
-    const updateEditorData = (data: any) => {
+    const updateEditorData = (data: string) => {
       editorData.value = data;
     };
     const validateQuestion = () => {

@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 import { useQuestionBankStore } from "./question-bank-store";
 import { usePopupStore } from "./popup";
 import Bank from "../type/bank";
+import Tag from "@/type/tag";
 export const useSelectQuestionFromBank = defineStore("selectQuestionFromBank", {
   state: () => ({
     bankList: [] as Array<Bank>,
@@ -49,7 +50,7 @@ export const useSelectQuestionFromBank = defineStore("selectQuestionFromBank", {
         obj.Tags = response.data.Data;
       }
     },
-    async getListPart(bank: Bank, tag: any): Promise<Array<PartQuestion>> {
+    async getListPart(bank: Bank, tag: Tag): Promise<Array<PartQuestion>> {
       const bankID = bank.ID;
       const tagID = tag.ID;
       const url =

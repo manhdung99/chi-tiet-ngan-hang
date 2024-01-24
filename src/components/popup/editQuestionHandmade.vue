@@ -131,7 +131,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import closeIcon from "../../assets/image/close-icon.svg";
 import { usePopupStore } from "../../stores/popup";
 import { useQuestionBankStore } from "../../stores/question-bank-store";
@@ -258,7 +258,7 @@ export default defineComponent({
         question.Answers = answers;
       }
     };
-    const updateEditorData = (data: any) => {
+    const updateEditorData = (data: string) => {
       editorData.value = data;
     };
     const validateQuestion = () => {
@@ -319,7 +319,9 @@ export default defineComponent({
     onMounted(() => {
       // Set the question ref to a deep copy of props.questionPart
       question.value = JSON.parse(JSON.stringify(props.questionPart));
-      convertStringNullToNull(question.value);
+      if (question.value) {
+        convertStringNullToNull(question.value);
+      }
       if (question.value) {
         question.value.Description = addStaticLink(question.value.Description);
         question.value.Description = changeMathJaxDes(

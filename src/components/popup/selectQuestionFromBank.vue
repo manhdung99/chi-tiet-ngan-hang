@@ -202,6 +202,7 @@ import { addStaticLink } from "../../uses/addStaticLink";
 import Answer from "../../type/answer";
 import Question from "../../type/question";
 import { validateQuestion } from "../../uses/function";
+import Tag from "@/type/tag";
 export default defineComponent({
   name: "SelectQuestionBank",
   components: {
@@ -270,7 +271,7 @@ export default defineComponent({
     };
     const currentListPartQuestion = ref<Array<PartQuestion>>([]);
     const currentQuestionPartSelected = ref<Array<PartQuestion>>([]);
-    const getListPartByTag = async (bank: Bank, tag: any) => {
+    const getListPartByTag = async (bank: Bank, tag: Tag) => {
       checkAll.value = false;
       isLoading.value = true;
       currentListPartQuestion.value = await getListPart(bank, tag);

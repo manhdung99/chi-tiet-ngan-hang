@@ -152,7 +152,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import inboxIcon from "../../assets/image/noun-inbox.svg";
 import closeIcon from "../../assets/image/close-icon.svg";
 import { usePopupStore } from "@/stores/popup";
@@ -236,6 +236,7 @@ export default defineComponent({
       const data = await validateQuestion(currentListPartQuestion.value);
       currentListPartQuestion.value = data;
     };
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
     const handleFileChange = async (event: any) => {
       updateLoading(true);
       fileImported.value = true;

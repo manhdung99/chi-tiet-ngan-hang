@@ -26,13 +26,14 @@ export const changeMathJaxDes = (des: string) => {
     des = des.replaceAll(":mml", "");
   }
   return des;
-};
+}; /* eslint-disable  @typescript-eslint/no-explicit-any */
 export const flattenObject = (formData: FormData, obj: any, prefix = "") => {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const propName = prefix ? `${prefix}.${key}` : key;
       if (Array.isArray(obj[key])) {
         // If it's an array, iterate over each item in the array
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
         obj[key].forEach((item: any, index: number) => {
           flattenObject(formData, item, `${propName}[${index}]`); // Pass formData as the first argument
         });

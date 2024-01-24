@@ -253,6 +253,7 @@
 <script lang="ts">
 declare global {
   interface Window {
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
     MathJax: any;
   }
 }
@@ -302,8 +303,7 @@ export default defineComponent({
       openImportFromFile,
       openAddnewSuccess,
     } = storeToRefs(usePopupStore());
-    const { updateAddNewBankModalStatus, updateAddNewSuccessStatus } =
-      usePopupStore();
+    const { updateAddNewBankModalStatus } = usePopupStore();
     const { isLoading } = storeToRefs(usePopupStore());
     const {
       getCurrentBankQuestions,

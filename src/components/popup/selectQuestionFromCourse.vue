@@ -1276,6 +1276,7 @@ export default defineComponent({
       listLessons,
       listLessonParts,
       isLoading,
+      chapters,
       cancelAction,
       saveData,
       updateSelectQuestionFromCourseStatus,

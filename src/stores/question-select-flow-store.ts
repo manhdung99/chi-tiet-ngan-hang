@@ -5,13 +5,16 @@ import Lesson from "../type/lesson";
 import { generateRandomHexId } from "../uses/function";
 import { usePopupStore } from "./popup";
 import Unit from "../type/unit";
+import Course from "@/type/course";
+import Chapter from "@/type/chapter";
 export const useSelectQuestionStore = defineStore("selectQuestionStore", {
   state: () => ({
-    courses: [] as Array<any>,
+    courses: [] as Array<Course>,
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
     currentSelectedQuestion: [] as Array<any>,
     isFillDesOnetime: true,
     tagsNameOneTime: "",
-    chapters: [] as Array<any>,
+    chapters: [] as Array<Chapter>,
     listLessons: [] as Array<Lesson>,
     listLessonParts: [] as PartQuestion[],
   }),

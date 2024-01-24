@@ -1,11 +1,12 @@
 import PartQuestion from "../type/partQuestion";
 import Question from "../type/question";
 import axios, { AxiosResponse } from "axios";
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export function uploadImage(loader: any) {
   return {
     upload: () => {
-      return new Promise((resolve, reject) => {
-        loader.file.then(async (file: any) => {
+      return new Promise((resolve) => {
+        loader.file.then(async (file: File) => {
           try {
             if (!file) return;
             const response = await uploadImageAPI(file);
@@ -20,7 +21,7 @@ export function uploadImage(loader: any) {
     },
   };
 }
-export async function uploadImageAPI(img: any) {
+export async function uploadImageAPI(img: File) {
   const form = new FormData();
   form.append("image", img);
 
@@ -102,8 +103,8 @@ export async function validateQuestion(partQuestions: PartQuestion[]) {
   }
   return partQuestions;
 }
-
-export function convertStringNullToNull(obj: any): void {
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+export function convertStringNullToNull(obj: Record<string, any>): void {
   for (const key in obj) {
     if (obj[key] === "null") {
       obj[key] = null;

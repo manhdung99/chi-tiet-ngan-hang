@@ -336,7 +336,9 @@ export default defineComponent({
     onMounted(() => {
       // Set the question ref to a deep copy of props.questionPart
       question.value = JSON.parse(JSON.stringify(props.questionPart));
-      convertStringNullToNull(question.value);
+      if (question.value) {
+        convertStringNullToNull(question.value);
+      }
       if (question.value) {
         question.value.Description = addStaticLink(question.value.Description);
         question.value.Description = changeMathJaxDes(

@@ -41,7 +41,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup() {
     const { updateAddNewSuccessStatus } = usePopupStore();
     const { deleteBank, duplicateBank } = useQuestionBankStore();
     const { bankID } = storeToRefs(useQuestionBankStore());

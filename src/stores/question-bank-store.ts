@@ -7,7 +7,7 @@ import { generateRandomHexId } from "../uses/function";
 import { flattenObject } from "../uses/convertData";
 export const useQuestionBankStore = defineStore("questionBankStore", {
   state: () => ({
-    questionBanks: [] as Array<any>,
+    questionBanks: [] as Array<PartQuestion>,
     currentBankQuestions: [] as Array<PartQuestion>,
     questionDeleteID: "",
     questionDeleteIndex: 0,
@@ -62,7 +62,7 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
         data.ID == bank.ID;
       });
     },
-    async getCurrentBankQuestions(id: string, searchText = "", LevelPart = "") {
+    async getCurrentBankQuestions(id: string) {
       const popUp = usePopupStore();
       popUp.isLoading = true;
       if (id && id.length > 0) {
@@ -146,10 +146,11 @@ export const useQuestionBankStore = defineStore("questionBankStore", {
       formData.append("ID", bankID);
       formData.append("Name", currentbankName);
       formData.append("MainSubjectID", subjectID);
-
+      /* eslint-disable  @typescript-eslint/no-explicit-any */
       addnewArray.forEach((obj: any, index: number) => {
         flattenObject(formData, obj, `createList[${index}]`);
       });
+      /* eslint-disable  @typescript-eslint/no-explicit-any */
       arrayUpdate.forEach((obj: any, index: number) => {
         flattenObject(formData, obj, `updateList[${index}]`);
       });

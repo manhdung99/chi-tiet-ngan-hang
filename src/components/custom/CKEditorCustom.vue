@@ -24,9 +24,10 @@ export default defineComponent({
   emits: ["update:modelValue"],
   setup(props) {
     const localEditorData = ref(""); // Use props.value, not props.editorData
-
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
     function uploader(editor: any) {
       editor.plugins.get("FileRepository").createUploadAdapter = (
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
         loader: any
       ) => {
         return uploadImage(loader);
