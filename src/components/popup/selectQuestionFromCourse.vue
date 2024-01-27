@@ -91,10 +91,10 @@
                 @click="showSelectedSentence = false"
                 :class="
                   !showSelectedSentence
-                    ? '!border-b-2 border-blue-500 text-blue-500'
+                    ? '!border-b-2 !border-blue-500 text-blue-500'
                     : ''
                 "
-                class="text-sm border-b pb-3 pr-2"
+                class="text-sm border-b pb-3 pr-2 outline-none"
               >
                 Câu hỏi từ học liệu
               </button>
@@ -102,10 +102,10 @@
                 @click="showSelectedSentence = true"
                 :class="
                   showSelectedSentence
-                    ? '!border-b-2 border-blue-500 text-blue-500'
+                    ? '!border-b-2 !border-blue-500 text-blue-500'
                     : ''
                 "
-                class="text-sm border-b pb-3 pl-2"
+                class="text-sm border-b pb-3 pl-2 outline-none"
               >
                 Câu đã chọn ({{ currentSelectedQuestion.length }})
               </button>

@@ -39,6 +39,15 @@
                 <span class="text-red-500">*</span> Tên ngân hàng câu hỏi
               </div>
               <input v-model="currentbankName" class="input" type="text" />
+              <div
+                v-if="
+                  bankNameError &&
+                  (!currentbankName || currentbankName.length == 0)
+                "
+                class="text-red-500 text-sm"
+              >
+                Chưa có tên ngân hàng
+              </div>
             </div>
             <div class="">
               <button
@@ -337,6 +346,7 @@ export default defineComponent({
     const openRemoveModal = ref(false);
     const currentbankName = ref("");
     const listTagName = ref<any[]>([]);
+    const bankNameError = ref(false);
     const createListAnswerQuiz2 = () => {
       if (currentBankQuestionFilter.value.length > 0) {
         currentBankQuestionFilter.value.forEach((part) => {
@@ -354,25 +364,29 @@ export default defineComponent({
     };
     // Save bank to DB
     const addBank = async () => {
-      if (subjectID.value == "") {
-        subjectID.value = localStorage.getItem("subjectID") as string;
-      }
-      arrayAddnew.value = arrayAddnew.value.map((data) => {
-        return { ...data, TagsName: data.TagsName?.replace("-", ",") };
-      });
-      arrayUpdate.value = arrayUpdate.value.map((data) => {
-        return { ...data, TagsName: data.TagsName?.replace("-", ",") };
-      });
-      await addOrUpdateBank(
-        bankID.value,
-        currentbankName.value,
-        subjectID.value,
-        arrayAddnew.value,
-        arrayUpdate.value,
-        arrayDelete.value
-      );
-      if (bankID.value.length > 0) {
-        localStorage.removeItem(`bank-${bankID.value}`);
+      if (currentbankName.value && currentbankName.value.length > 0) {
+        if (subjectID.value == "") {
+          subjectID.value = localStorage.getItem("subjectID") as string;
+        }
+        arrayAddnew.value = arrayAddnew.value.map((data) => {
+          return { ...data, TagsName: data.TagsName?.replace("-", ",") };
+        });
+        arrayUpdate.value = arrayUpdate.value.map((data) => {
+          return { ...data, TagsName: data.TagsName?.replace("-", ",") };
+        });
+        await addOrUpdateBank(
+          bankID.value,
+          currentbankName.value,
+          subjectID.value,
+          arrayAddnew.value,
+          arrayUpdate.value,
+          arrayDelete.value
+        );
+        if (bankID.value.length > 0) {
+          localStorage.removeItem(`bank-${bankID.value}`);
+        }
+      } else {
+        bankNameError.value = true;
       }
     };
     // Remove bank and back to list
@@ -663,6 +677,7 @@ export default defineComponent({
       openAddnewSuccess,
       showRemoveButton,
       listTagName,
+      bankNameError,
       validateQuestion,
       handlePageSizeChange,
       updateAddNewBankModalStatus,
