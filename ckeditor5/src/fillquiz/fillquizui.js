@@ -9,6 +9,9 @@ import {
   ContextualBalloon,
   clickOutsideHandler,
 } from "@ckeditor/ckeditor5-ui";
+import {
+	ClickObserver,
+} from 'ckeditor5/src/engine.js';
 import FormView from "./fillquizview";
 import "./css/styles.css";
 
@@ -19,11 +22,10 @@ export default class FillQuizUI extends Plugin {
 
   init() {
     const editor = this.editor;
-
+    editor.editing.view.addObserver( ClickObserver );
     // Create the balloon and the form view.
     this._balloon = this.editor.plugins.get(ContextualBalloon);
     this.formView = this._createFormView();
-
     editor.ui.componentFactory.add("fillquiz", () => {
       const button = new ButtonView();
 
@@ -35,9 +37,9 @@ export default class FillQuizUI extends Plugin {
       this.listenTo(button, "execute", () => {
         this._showUI();
       });
-
       return button;
     });
+    this._enableBalloonActivators();
   }
 
   _createFormView() {
@@ -113,6 +115,19 @@ export default class FillQuizUI extends Plugin {
     // right away and keep the editor focused.
     this.editor.editing.view.focus();
   }
+  _enableBalloonActivators() {
+    const view = this.editor.editing.view;
+    const viewDocument = view.document;
+    const selection = view.document.selection;
+    console.log(viewDocument);
+    // Handle click on view document and show panel when selection is placed inside the link element.
+    // Keep panel open until selection will be inside the same link element.
+    this.listenTo(viewDocument, 'click', () => {
+        if(selection.getFirstPosition().parent.name == "fillquiz"){
+          this._showUI();
+        }
+    });
+}
 
   _getBalloonPositionData() {
     const view = this.editor.editing.view;
@@ -127,4 +142,5 @@ export default class FillQuizUI extends Plugin {
       target,
     };
   }
+
 }

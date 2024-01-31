@@ -6,6 +6,7 @@ export default class FillQuizUI extends Plugin {
     _createFormView(): FormView;
     _showUI(): void;
     _hideUI(): void;
+    _enableBalloonActivators(): void;
     _getBalloonPositionData(): {
         target: () => Range;
     };
